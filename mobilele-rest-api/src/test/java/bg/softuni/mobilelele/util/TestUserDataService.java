@@ -10,13 +10,13 @@ import java.util.Collections;
 
 @Service
 public class TestUserDataService implements UserDetailsService {
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return new MobileleUserDetails(
-            "12345",
-             username,
-            "Test",
-            "User",
-             Collections.emptyList());
-  }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return new MobileleUserDetails(
+                "12345",
+                username,
+                "Test",
+                "User",
+                Collections.emptyList());
+    }
 }

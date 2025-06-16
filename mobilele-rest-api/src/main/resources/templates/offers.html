@@ -48,7 +48,8 @@
             <li class="page-item" th:classappend="${offers.hasPrevious() ? '' : 'disabled'}">
                 <a class="page-link"
                    href="#"
-                   th:href="@{/offers/all(size=${offers.getSize()},page=${offers.getNumber() - 1})}" th:if="${offers.hasPrevious()}">Previous</a>
+                   th:href="@{/offers/all(size=${offers.getSize()},page=${offers.getNumber() - 1})}"
+                   th:if="${offers.hasPrevious()}">Previous</a>
                 <a class="page-link"
                    href="#" th:unless="${offers.hasPrevious()}">Previous</a>
             <li th:classappend="${page == offers.getNumber() ? 'disabled' : ''}"
@@ -62,7 +63,8 @@
             <li class="page-item" th:classappend="${offers.hasNext() ? '' : 'disabled'}">
                 <a class="page-link"
                    href="#"
-                   th:href="@{/offers/all(size=${offers.getSize()},page=${offers.getNumber() + 1})}" th:if="${offers.hasNext()}">Next</a>
+                   th:href="@{/offers/all(size=${offers.getSize()},page=${offers.getNumber() + 1})}"
+                   th:if="${offers.hasNext()}">Next</a>
                 <a class="page-link"
                    href="#" th:unless="${offers.hasNext()}">Next</a>
             </li>

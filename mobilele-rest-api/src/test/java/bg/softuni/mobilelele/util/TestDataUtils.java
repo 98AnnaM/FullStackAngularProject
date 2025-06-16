@@ -16,129 +16,129 @@ import static bg.softuni.mobilelele.model.enums.TransmissionEnum.MANUAL;
 @Component
 public class TestDataUtils {
 
-  private UserRepository userRepository;
-  private UserRoleRepository userRoleRepository;
-  private OfferRepository offerRepository;
-  private ModelRepository modelRepository;
-  private BrandRepository brandRepository;
-  private CommentRepository commentRepository;
-  private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final OfferRepository offerRepository;
+    private final ModelRepository modelRepository;
+    private final BrandRepository brandRepository;
+    private final CommentRepository commentRepository;
 
-  public TestDataUtils(UserRepository userRepository,
-                       UserRoleRepository userRoleRepository,
-                       OfferRepository offerRepository,
-                       ModelRepository modelRepository,
-                       BrandRepository brandRepository,
-                       CommentRepository commentRepository,
-                       PasswordEncoder passwordEncoder) {
-    this.userRepository = userRepository;
-    this.userRoleRepository = userRoleRepository;
-    this.offerRepository = offerRepository;
-    this.modelRepository = modelRepository;
-    this.brandRepository = brandRepository;
-    this.commentRepository = commentRepository;
-    this.passwordEncoder = passwordEncoder;
-  }
-
-  private void initRoles() {
-    if (userRoleRepository.count() == 0) {
-      UserRoleEntity adminRole = new UserRoleEntity().setUserRole(UserRoleEnum.ADMIN);
-      UserRoleEntity userRole = new UserRoleEntity().setUserRole(UserRoleEnum.USER);
-
-      userRoleRepository.save(adminRole);
-      userRoleRepository.save(userRole);
+    public TestDataUtils(UserRepository userRepository,
+                         UserRoleRepository userRoleRepository,
+                         OfferRepository offerRepository,
+                         ModelRepository modelRepository,
+                         BrandRepository brandRepository,
+                         CommentRepository commentRepository,
+                         PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.offerRepository = offerRepository;
+        this.modelRepository = modelRepository;
+        this.brandRepository = brandRepository;
+        this.commentRepository = commentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-  }
 
-  public UserEntity createTestAdmin(String email) {
+    private void initRoles() {
+        if (userRoleRepository.count() == 0) {
+            UserRoleEntity adminRole = new UserRoleEntity().setUserRole(UserRoleEnum.ADMIN);
+            UserRoleEntity userRole = new UserRoleEntity().setUserRole(UserRoleEnum.USER);
 
-    initRoles();
+            userRoleRepository.save(adminRole);
+            userRoleRepository.save(userRole);
+        }
+    }
 
-    var admin = new UserEntity().
-        setEmail(email).
-        setFirstName("Admin").
-        setLastName("Adminov").
-        setActive(true).
-        setUserRoles(userRoleRepository.findAll());
+    public UserEntity createTestAdmin(String email) {
 
-    return userRepository.save(admin);
-  }
+        initRoles();
 
-  public UserEntity createTestUser(String email) {
+        var admin = new UserEntity().
+                setEmail(email).
+                setFirstName("Admin").
+                setLastName("Adminov").
+                setActive(true).
+                setUserRoles(userRoleRepository.findAll());
 
-    initRoles();
+        return userRepository.save(admin);
+    }
 
-    var user = new UserEntity().
-        setEmail(email).
-        setFirstName("User").
-        setLastName("Userov").
-        setActive(true).
-        setPassword(passwordEncoder.encode("correctPassword")).
-        setUserRoles(userRoleRepository.
-            findAll().stream().
-            filter(r -> r.getUserRole() != UserRoleEnum.ADMIN).
-            toList());
+    public UserEntity createTestUser(String email) {
 
-    return userRepository.save(user);
-  }
+        initRoles();
 
-  public OfferEntity createTestOffer(UserEntity seller,
-                                     ModelEntity model) {
-    var offerEntity = new OfferEntity().
-        setEngine(EngineEnum.GASOLINE).
-        setMileage(100000).
-        setPrice(BigDecimal.TEN).
-        setDescription("Test description").
-        setTransmission(MANUAL).
-        setYear(2000).
-        setModel(model).
-        setSeller(seller);
+        var user = new UserEntity().
+                setEmail(email).
+                setFirstName("User").
+                setLastName("Userov").
+                setActive(true).
+                setPassword(passwordEncoder.encode("correctPassword")).
+                setUserRoles(userRoleRepository.
+                        findAll().stream().
+                        filter(r -> r.getUserRole() != UserRoleEnum.ADMIN).
+                        toList());
 
-    return offerRepository.save(offerEntity);
-  }
+        return userRepository.save(user);
+    }
 
-  public BrandEntity createTestBrand() {
-    var brandEntity = new BrandEntity().
-        setName("Ford");
+    public OfferEntity createTestOffer(UserEntity seller,
+                                       ModelEntity model) {
+        var offerEntity = new OfferEntity().
+                setEngine(EngineEnum.GASOLINE).
+                setMileage(100000).
+                setPrice(BigDecimal.TEN).
+                setDescription("Test description").
+                setTransmission(MANUAL).
+                setYear(2000).
+                setModel(model).
+                setSeller(seller);
 
-    return brandRepository.save(brandEntity);
-  }
+        return offerRepository.save(offerEntity);
+    }
 
-  public ModelEntity createTestModel(BrandEntity brandEntity) {
-    ModelEntity model = new ModelEntity().
-        setName("Fiesta").
-        setBrand(brandEntity).
-        setCategory(CategoryEnum.CAR).
-        setImageUrl("http://image.com/image.png").
-        setStartYear(1978);
+    public BrandEntity createTestBrand() {
+        var brandEntity = new BrandEntity().
+                setName("Ford");
 
-    return modelRepository.save(model);
-  }
+        return brandRepository.save(brandEntity);
+    }
 
-  public CommentEntity createTestComment(UserEntity testUser, OfferEntity testOffer, String message) {
-    CommentEntity newComment = new CommentEntity();
-    newComment.setTextContent(message);
-    newComment.setCreated(LocalDateTime.now());
-    newComment.setAuthor(testUser);
-    newComment.setOffer(testOffer);
+    public ModelEntity createTestModel(BrandEntity brandEntity) {
+        ModelEntity model = new ModelEntity().
+                setName("Fiesta").
+                setBrand(brandEntity).
+                setCategory(CategoryEnum.CAR).
+                setImageUrl("http://image.com/image.png").
+                setStartYear(1978);
 
-    return  commentRepository.save(newComment);
-  }
+        return modelRepository.save(model);
+    }
 
-  public void cleanUpDatabase() {
-    commentRepository.deleteAll();
-    offerRepository.deleteAll();
-    userRepository.deleteAll();
-    userRoleRepository.deleteAll();
-    modelRepository.deleteAll();
-    brandRepository.deleteAll();
-  }
+    public CommentEntity createTestComment(UserEntity testUser, OfferEntity testOffer, String message) {
+        CommentEntity newComment = new CommentEntity();
+        newComment.setTextContent(message);
+        newComment.setCreated(LocalDateTime.now());
+        newComment.setAuthor(testUser);
+        newComment.setOffer(testOffer);
 
-  public OfferRepository getOfferRepository() {
-    return offerRepository;
-  }
+        return commentRepository.save(newComment);
+    }
 
-  public CommentRepository getCommentRepository() {
-    return commentRepository;
-  }
+    public void cleanUpDatabase() {
+        commentRepository.deleteAll();
+        offerRepository.deleteAll();
+        userRepository.deleteAll();
+        userRoleRepository.deleteAll();
+        modelRepository.deleteAll();
+        brandRepository.deleteAll();
+    }
+
+    public OfferRepository getOfferRepository() {
+        return offerRepository;
+    }
+
+    public CommentRepository getCommentRepository() {
+        return commentRepository;
+    }
 }

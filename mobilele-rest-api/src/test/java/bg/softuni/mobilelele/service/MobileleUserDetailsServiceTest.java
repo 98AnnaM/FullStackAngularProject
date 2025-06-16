@@ -13,12 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +31,7 @@ class MobileleUserDetailsServiceTest {
     private UserRepository mockUserRepository;
 
     @BeforeEach
-    void init(){
+    void init() {
 
         serviceToTest = new MobileleUserDetailsService(mockUserRepository);
 
@@ -53,13 +51,13 @@ class MobileleUserDetailsServiceTest {
     }
 
     @Test
-    void testUserNotFound(){
+    void testUserNotFound() {
         Assertions.assertThrows(UsernameNotFoundException.class,
                 () -> serviceToTest.loadUserByUsername("not_existing_email"));
     }
 
     @Test
-    void testUserFound(){
+    void testUserFound() {
 
         Mockito.when(mockUserRepository.findByEmail(testUser.getEmail()))
                 .thenReturn(Optional.of(testUser));
@@ -81,7 +79,6 @@ class MobileleUserDetailsServiceTest {
         String expectedRoles = "ROLE_ADMIN, ROLE_USER";
 
         Assertions.assertEquals(expectedRoles, actualRoles);
-
 
 
     }

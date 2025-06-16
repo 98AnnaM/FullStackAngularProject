@@ -2,14 +2,10 @@ package bg.softuni.mobilelele.web;
 
 import bg.softuni.mobilelele.model.dto.CommentAddDto;
 import bg.softuni.mobilelele.model.dto.CommentViewDto;
-import bg.softuni.mobilelele.model.dto.OfferAddOrEditDto;
-import bg.softuni.mobilelele.model.dto.OfferDetailDTO;
 import bg.softuni.mobilelele.model.entity.CommentEntity;
 import bg.softuni.mobilelele.model.entity.ModelEntity;
 import bg.softuni.mobilelele.model.entity.OfferEntity;
 import bg.softuni.mobilelele.model.entity.UserEntity;
-import bg.softuni.mobilelele.model.enums.EngineEnum;
-import bg.softuni.mobilelele.model.enums.TransmissionEnum;
 import bg.softuni.mobilelele.util.TestDataUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -24,7 +20,6 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
