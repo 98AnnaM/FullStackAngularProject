@@ -1,0 +1,110 @@
+/* Container */
+.register-container {
+  max-width: 500px;
+  margin: 2em auto;
+  padding: 25px 35px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 14px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.7);
+}
+
+/* Title */
+.register-title {
+  color: white;
+  text-align: center;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.8em;
+}
+
+/* Form */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6em;
+}
+
+/* Rows for 2-column layout */
+.row {
+  display: flex;
+  gap: 1.5em;
+  flex-wrap: wrap;
+}
+
+/* Half width column */
+.col-half {
+  flex: 1 1 48%;
+  min-width: 48%;
+}
+
+/* Form group styling */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.form-label {
+  color: white;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+/* Inputs */
+.form-input, .form-select {
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+  background-color: white;
+  color: black;
+}
+
+/* Select multiple */
+.form-select {
+  min-height: 100px;
+}
+
+/* Focus styles */
+.form-input:focus, .form-select:focus {
+  box-shadow: 0 0 8px 2px #4ebced;
+}
+
+/* Error messages */
+.errors {
+  color: #ff4c4c;
+  background-color: rgba(255, 0, 0, 0.15);
+  padding: 0.7em 1em;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-top: 0.5em;
+}
+
+/* Button container */
+.button-holder {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5em;
+}
+
+/* Submit button (reuse from login) */
+.btn-submit {
+  background-color: #4ebced;
+  color: white;
+  padding: 0.9em 2.3em;
+  border-radius: 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-submit:hover,
+.btn-submit:focus {
+  background-color: #3aa4d9;
+  transform: scale(1.06);
+  outline: none;
+}

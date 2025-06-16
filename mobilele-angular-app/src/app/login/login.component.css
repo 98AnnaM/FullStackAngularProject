@@ -1,0 +1,89 @@
+/* Container centered with max width */
+.login-container {
+  max-width: 400px;
+  margin: 2em auto;
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.7);
+}
+
+/* Title */
+.login-title {
+  color: white;
+  text-align: center;
+  margin-bottom: 1.5em;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+/* Form styles */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+/* Form groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.form-label {
+  color: white;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+/* Inputs */
+.form-input {
+  padding: 0.6em 1em;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Input focus */
+.form-input:focus {
+  box-shadow: 0 0 6px 2px #4ebced;
+}
+
+/* Error message */
+.errors {
+  color: #ff4c4c;
+  background-color: rgba(255, 0, 0, 0.15);
+  padding: 0.75em 1em;
+  border-radius: 6px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Button container */
+.button-holder {
+  display: flex;
+  justify-content: center;
+}
+
+/* Submit button */
+.btn-submit {
+  background-color: #4ebced;
+  color: white;
+  padding: 0.8em 2em;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-submit:hover,
+.btn-submit:focus {
+  background-color: #3aa4d9;
+  transform: scale(1.05);
+  outline: none;
+}

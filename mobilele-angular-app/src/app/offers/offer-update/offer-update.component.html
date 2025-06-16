@@ -1,0 +1,77 @@
+<!-- Update Offer Page (No Bootstrap) -->
+<div class="page-wrapper">
+  <div class="offer-form">
+    <h2 class="form-title">Update Offer</h2>
+
+    <form method="POST" class="form-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="model" class="form-label">Model</label>
+          <select id="model" class="form-control">
+            <option value="">- Select a model -</option>
+            <optgroup label="Brand name">
+              <option>Model</option>
+            </optgroup>
+          </select>
+          <p class="form-error">Vehicle model is required.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="price" class="form-label">Price</label>
+          <input id="price" type="number" min="0" step="100" class="form-control" placeholder="Suggested price" />
+          <p class="form-error">Suggested price is required.</p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="engine" class="form-label">Engine</label>
+          <select id="engine" class="form-control">
+            <option value="">- Select engine type -</option>
+            <option>Engine type</option>
+          </select>
+          <p class="form-error">Engine type is required.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="transmission" class="form-label">Transmission</label>
+          <select id="transmission" class="form-control">
+            <option value="">- Select transmission type -</option>
+            <option>Transmission type</option>
+          </select>
+          <p class="form-error">Transmission type is required.</p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="year" class="form-label">Year</label>
+          <input id="year" type="number" min="1900" max="2099" step="1" class="form-control" placeholder="Manufacturing year" />
+          <p class="form-error">Manufacturing year is required.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="mileage" class="form-label">Mileage</label>
+          <input id="mileage" type="number" min="0" max="900000" step="1000" class="form-control" placeholder="Mileage in kilometers" />
+          <p class="form-error">Mileage in kilometers is required.</p>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" class="form-control" rows="3" placeholder="Description"></textarea>
+        <p class="form-error">Description is required.</p>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="imageUrl" class="form-label">Image URL</label>
+        <input id="imageUrl" type="url" class="form-control" placeholder="Put vehicle image URL here" />
+        <p class="form-error">Vehicle image URL is required.</p>
+      </div>
+
+      <div class="form-submit">
+        <button type="submit" class="submit-btn">Update Offer</button>
+      </div>
+    </form>
+  </div>
+</div>

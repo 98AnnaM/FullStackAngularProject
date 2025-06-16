@@ -1,0 +1,121 @@
+package bg.softuni.mobilelele.service;
+
+import bg.softuni.mobilelele.model.dto.OfferAddOrEditDto;
+import bg.softuni.mobilelele.model.dto.OfferDetailDTO;
+import bg.softuni.mobilelele.model.dto.OfferSearchDTO;
+import bg.softuni.mobilelele.model.entity.ModelEntity;
+import bg.softuni.mobilelele.model.entity.OfferEntity;
+import bg.softuni.mobilelele.model.entity.UserEntity;
+import bg.softuni.mobilelele.model.enums.UserRoleEnum;
+import bg.softuni.mobilelele.model.mapper.OfferMapper;
+import bg.softuni.mobilelele.repository.ModelRepository;
+import bg.softuni.mobilelele.repository.OfferRepository;
+import bg.softuni.mobilelele.repository.OfferSpecification;
+import bg.softuni.mobilelele.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class OfferService {
+
+    private final OfferRepository offerRepository;
+    private final OfferMapper offerMapper;
+    private final UserRepository userRepository;
+    private final ModelRepository modelRepository;
+
+    public OfferService(OfferRepository offerRepository, OfferMapper offerMapper, UserRepository userRepository, ModelRepository modelRepository) {
+        this.offerRepository = offerRepository;
+        this.offerMapper = offerMapper;
+        this.userRepository = userRepository;
+        this.modelRepository = modelRepository;
+
+    }
+
+    public OfferDetailDTO addOffer(OfferAddOrEditDto addOfferDto, UserDetails userDetails) {
+        OfferEntity newOffer = offerMapper.addOrEditOfferDtoToOfferEntity(addOfferDto);
+
+        UserEntity seller = this.userRepository
+                .findByEmail(userDetails.getUsername())
+                .orElseThrow();
+
+        ModelEntity model = this.modelRepository
+                .findById(addOfferDto.getModelId())
+                .orElseThrow();
+
+        newOffer.setModel(model);
+        newOffer.setSeller(seller);
+
+        return offerMapper.offerEntityToOfferDetailDto(this.offerRepository.save(newOffer));
+
+    }
+
+    public List<OfferDetailDTO> findAllOfferDetailDto() {
+        return this.offerRepository
+                .findAll()
+                .stream()
+                .map(offerMapper::offerEntityToOfferDetailDto)
+                .toList();
+
+    }
+
+    public List<OfferDetailDTO> searchOffer(OfferSearchDTO searchOfferDTO) {
+        return this.offerRepository
+                .findAll(new OfferSpecification(searchOfferDTO))
+                .stream()
+                .map(offerMapper::offerEntityToOfferDetailDto)
+                .toList();
+    }
+
+    public Optional<OfferDetailDTO> findOfferByOfferId(Long offerID, String currentUser) {
+        return offerRepository.
+                findById(offerID).
+                map(offer -> {
+                    OfferDetailDTO offerDetailDTO = offerMapper.offerEntityToOfferDetailDto(offer);
+                    offerDetailDTO.setCanDelete(isOwner(currentUser, offerID));
+
+                    return offerDetailDTO;
+                });
+    }
+
+    public Optional<OfferAddOrEditDto> getOfferEditDetails(Long offerId) {
+        return offerRepository.
+                findById(offerId).
+                map(offerMapper::offerEntityToAddOfferDto);
+    }
+
+    public void deleteOfferById(Long offerId) {
+        offerRepository.deleteById(offerId);
+    }
+
+    public boolean isOwner(String userName, Long offerId) {
+        boolean isOwner = offerRepository.
+                findById(offerId).
+                filter(o -> o.getSeller().getEmail().equals(userName)).
+                isPresent();
+
+        if (isOwner) {
+            return true;
+        }
+
+        return userRepository
+                .findByEmail(userName)
+                .filter(this::isAdmin)
+                .isPresent();
+    }
+
+    private boolean isAdmin(UserEntity user) {
+        return user.getUserRoles().
+                stream().
+                anyMatch(r -> r.getUserRole() == UserRoleEnum.ADMIN);
+    }
+
+    public OfferDetailDTO updateOfferById(OfferAddOrEditDto addOrEditOfferDto, Long id, UserDetails userDetails) {
+        OfferEntity updateOffer = offerMapper.addOrEditOfferDtoToOfferEntity(addOrEditOfferDto);
+        updateOffer.setSeller(userRepository.findByEmail(userDetails.getUsername()).orElseThrow());
+        updateOffer.setModel(modelRepository.findById(addOrEditOfferDto.getModelId()).orElseThrow());
+        return offerMapper.offerEntityToOfferDetailDto(offerRepository.save(updateOffer));
+    }
+}
