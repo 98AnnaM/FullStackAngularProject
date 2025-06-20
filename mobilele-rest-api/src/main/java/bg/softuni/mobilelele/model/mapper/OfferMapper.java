@@ -15,6 +15,7 @@ public interface OfferMapper {
     @Mapping(source = "model.brand.name", target = "brandName")
     @Mapping(source = "seller.firstName", target = "sellerFirstName")
     @Mapping(source = "seller.lastName", target = "sellerLastName")
+    @Mapping(source = "seller.email", target = "sellerEmail")
     OfferDetailDTO offerEntityToOfferDetailDto(OfferEntity offer);
 
     @Mapping(source = "model.id", target = "modelId")

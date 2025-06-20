@@ -4,6 +4,7 @@ import bg.softuni.mobilelele.model.enums.EngineEnum;
 import bg.softuni.mobilelele.model.enums.TransmissionEnum;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class OfferDetailDTO {
 
@@ -18,7 +19,10 @@ public class OfferDetailDTO {
     private TransmissionEnum transmission;
     private String sellerFirstName;
     private String sellerLastName;
+    private String sellerEmail;
     private boolean canDelete;
+    private String description;
+    private List<CommentViewDto> comments;
 
     public OfferDetailDTO() {
     }
@@ -128,5 +132,29 @@ public class OfferDetailDTO {
     public OfferDetailDTO setId(Long id) {
         this.id = id;
         return this;
+    }
+
+    public String getSellerEmail() {
+        return sellerEmail;
+    }
+
+    public void setSellerEmail(String sellerEmail) {
+        this.sellerEmail = sellerEmail;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<CommentViewDto> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentViewDto> comments) {
+        this.comments = comments;
     }
 }

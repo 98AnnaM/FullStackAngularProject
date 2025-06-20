@@ -6,6 +6,7 @@ import bg.softuni.mobilelele.model.dto.OfferSearchDTO;
 import bg.softuni.mobilelele.model.user.MobileleUserDetails;
 import bg.softuni.mobilelele.service.BrandService;
 import bg.softuni.mobilelele.service.OfferService;
+import bg.softuni.mobilelele.service.UserService;
 import bg.softuni.mobilelele.web.exception.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,12 @@ public class OfferController {
 
     private final OfferService offerService;
     private final BrandService brandService;
+    private final UserService userService;
 
-    public OfferController(OfferService offerService, BrandService brandService) {
+    public OfferController(OfferService offerService, BrandService brandService, UserService userService) {
         this.offerService = offerService;
         this.brandService = brandService;
+        this.userService = userService;
     }
 
     @GetMapping("/offers/all")
@@ -35,6 +38,7 @@ public class OfferController {
         return ResponseEntity.ok(this.offerService.findAllOfferDetailDto());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/offers/add")
     public ResponseEntity<?> addOffer(@Valid @RequestBody OfferAddOrEditDto addOfferModel,
                                       @AuthenticationPrincipal UserDetails userDetails) {
@@ -67,7 +71,7 @@ public class OfferController {
         return ResponseEntity.ok(offerDto);
     }
 
-    @PreAuthorize("isAuthenticated() && @offerService.isOwner(#principal.name, #offerId)")
+    @PreAuthorize("isAuthenticated() and (@offerService.isOfferOwner(#principal.name, #offerId) or @userService.isUserAdmin(#principal.name))")
     @DeleteMapping("/offers/{id}")
     public ResponseEntity<Void> deleteOffer(
             Principal principal,
@@ -76,6 +80,7 @@ public class OfferController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("isAuthenticated() && @offerService.isOfferOwner(#principal.name, #id)")
     @PutMapping("/offers/edit/{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") Long id,

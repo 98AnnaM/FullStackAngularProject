@@ -1,5 +1,6 @@
 package bg.softuni.mobilelele.config;
 
+import bg.softuni.mobilelele.repository.UserRepository;
 import bg.softuni.mobilelele.service.JwtService;
 import bg.softuni.mobilelele.service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,14 +22,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     public JwtAuthenticationFilter(JwtService jwtService,
-                                   UserDetailsService userDetailsService,
-                                   UserService userService) {
+                                   UserDetailsService userDetailsService, UserRepository userRepository) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -48,8 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         email = jwtService.extractEmail(jwt);
 
-        if (email != null && userService.emailExists(email) &&
-                SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null &&
+                email != null && userRepository.existsByEmail(email)) {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 

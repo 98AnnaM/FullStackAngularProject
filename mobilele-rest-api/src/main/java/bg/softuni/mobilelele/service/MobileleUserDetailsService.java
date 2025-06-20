@@ -27,7 +27,7 @@ public class MobileleUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("Trying to load user by username: {}", username); // Add this line for logging
+        logger.info("Trying to load user by username: {}", username);
 
         return this.userRepository
                 .findByEmail(username)

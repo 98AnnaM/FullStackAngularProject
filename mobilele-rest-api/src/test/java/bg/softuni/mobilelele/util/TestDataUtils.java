@@ -59,6 +59,7 @@ public class TestDataUtils {
                 setFirstName("Admin").
                 setLastName("Adminov").
                 setActive(true).
+                setPassword(passwordEncoder.encode("correctPassword")).
                 setUserRoles(userRoleRepository.findAll());
 
         return userRepository.save(admin);

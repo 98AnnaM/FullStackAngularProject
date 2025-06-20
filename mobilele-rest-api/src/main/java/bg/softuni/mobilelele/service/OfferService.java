@@ -1,5 +1,6 @@
 package bg.softuni.mobilelele.service;
 
+import bg.softuni.mobilelele.model.dto.CommentViewDto;
 import bg.softuni.mobilelele.model.dto.OfferAddOrEditDto;
 import bg.softuni.mobilelele.model.dto.OfferDetailDTO;
 import bg.softuni.mobilelele.model.dto.OfferSearchDTO;
@@ -7,6 +8,7 @@ import bg.softuni.mobilelele.model.entity.ModelEntity;
 import bg.softuni.mobilelele.model.entity.OfferEntity;
 import bg.softuni.mobilelele.model.entity.UserEntity;
 import bg.softuni.mobilelele.model.enums.UserRoleEnum;
+import bg.softuni.mobilelele.model.mapper.CommentMapper;
 import bg.softuni.mobilelele.model.mapper.OfferMapper;
 import bg.softuni.mobilelele.repository.ModelRepository;
 import bg.softuni.mobilelele.repository.OfferRepository;
@@ -23,12 +25,16 @@ public class OfferService {
 
     private final OfferRepository offerRepository;
     private final OfferMapper offerMapper;
+    private final CommentMapper commentMapper;
+    private final CommentService commentService;
     private final UserRepository userRepository;
     private final ModelRepository modelRepository;
 
-    public OfferService(OfferRepository offerRepository, OfferMapper offerMapper, UserRepository userRepository, ModelRepository modelRepository) {
+    public OfferService(OfferRepository offerRepository, OfferMapper offerMapper, CommentMapper commentMapper, CommentService commentService, UserRepository userRepository, ModelRepository modelRepository) {
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
+        this.commentMapper = commentMapper;
+        this.commentService = commentService;
         this.userRepository = userRepository;
         this.modelRepository = modelRepository;
 
@@ -74,7 +80,17 @@ public class OfferService {
                 findById(offerID).
                 map(offer -> {
                     OfferDetailDTO offerDetailDTO = offerMapper.offerEntityToOfferDetailDto(offer);
-                    offerDetailDTO.setCanDelete(isOwner(currentUser, offerID));
+
+                    List<CommentViewDto> comments = offer.getComments().stream()
+                            .map(comment -> {
+                            CommentViewDto commentViewDto = commentMapper.commentEntityToCommentViewDto(comment);
+                            commentViewDto.setCanDelete(commentService.isAuthorOrAdmin(currentUser, comment.getId()));
+                            return commentViewDto;
+                            })
+                            .toList();
+
+                    offerDetailDTO.setComments(comments);
+                    offerDetailDTO.setCanDelete(isOfferOwner(currentUser, offerID));
 
                     return offerDetailDTO;
                 });
@@ -90,27 +106,13 @@ public class OfferService {
         offerRepository.deleteById(offerId);
     }
 
-    public boolean isOwner(String userName, Long offerId) {
-        boolean isOwner = offerRepository.
+    public boolean isOfferOwner(String userName, Long offerId) {
+        return offerRepository.
                 findById(offerId).
                 filter(o -> o.getSeller().getEmail().equals(userName)).
                 isPresent();
 
-        if (isOwner) {
-            return true;
         }
-
-        return userRepository
-                .findByEmail(userName)
-                .filter(this::isAdmin)
-                .isPresent();
-    }
-
-    private boolean isAdmin(UserEntity user) {
-        return user.getUserRoles().
-                stream().
-                anyMatch(r -> r.getUserRole() == UserRoleEnum.ADMIN);
-    }
 
     public OfferDetailDTO updateOfferById(OfferAddOrEditDto addOrEditOfferDto, Long id, UserDetails userDetails) {
         OfferEntity updateOffer = offerMapper.addOrEditOfferDtoToOfferEntity(addOrEditOfferDto);

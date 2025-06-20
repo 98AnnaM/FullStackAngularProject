@@ -77,3 +77,13 @@ VALUES (1, 'Gold Ford Fiesta.', 'GASOLINE', 'https://imgd-ct.aeplcdn.com/664x415
 
 ALTER TABLE offers
     ALTER COLUMN id RESTART WITH 14;
+
+INSERT INTO comments (id, text_content, created, author_id, offer_id)
+VALUES (1, 'Is this car still available?', '2024-06-10T10:30:00', 2, 1),
+       (2, 'Great condition, I''m interested!', '2024-06-11T12:45:00', 1, 1),
+       (3, 'Can you lower the price a bit?', '2024-06-12T09:00:00', 2, 1),
+       (4, 'Does it come with winter tires?', '2024-06-12T15:20:00', 1, 1),
+       (5, 'Looks nice! When was the last service?', '2024-06-13T17:30:00', 2, 1);
+
+ALTER TABLE comments
+    ALTER COLUMN id RESTART WITH 6;
