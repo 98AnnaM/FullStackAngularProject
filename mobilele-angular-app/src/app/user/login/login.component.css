@@ -21,7 +21,7 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5em;
+  gap: 1.2em;
 }
 
 /* Form groups */
@@ -53,13 +53,20 @@
 }
 
 /* Error message */
-.errors {
+.bad-credentials {
   color: #ff4c4c;
   background-color: rgba(255, 0, 0, 0.15);
   padding: 0.75em 1em;
   border-radius: 6px;
-  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0;
   text-align: center;
+}
+
+.errors {
+  color: #ff6666;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 /* Button container */
@@ -79,6 +86,7 @@
   border: none;
   cursor: pointer;
   transition: transform 0.3s ease, background-color 0.3s ease;
+  margin-top: 10px;
 }
 
 .btn-submit:hover,

@@ -4,20 +4,20 @@
   <div class="offer-content">
     <!-- Left: Image -->
     <div class="offer-image-box">
-      <img src="/images/car-dealership-car-car-showroom.jpg" alt="Car image" class="offer-image" />
+      <img [src]="offer.imageUrl" alt="Car image" class="offer-image" />
     </div>
 
     <!-- Right: Info -->
     <div class="offer-info-box">
-      <h3 class="offer-title">2021 Audi A6</h3>
+      <h3 class="offer-title">{{ offer.year }} {{ offer.brandName }} {{ offer.modelName }}</h3>
       <ul class="offer-details">
-        <li><strong>Mileage:</strong> 120,000 km</li>
-        <li><strong>Price:</strong> $15,000</li>
-        <li><strong>Engine:</strong> Petrol</li>
-        <li><strong>Transmission:</strong> Automatic</li>
-        <li><strong>Created:</strong> 2025-06-01</li>
-        <li><strong>Modified:</strong> 2025-06-10</li>
-        <li><strong>Seller:</strong> John Doe</li>
+        <li><strong>Offer ID:</strong> {{ offer.id }}</li>
+        <li><strong>Mileage:</strong> {{ offer.mileage }} km</li>
+        <li><strong>Price:</strong> €{{ offer.price }}</li>
+        <li><strong>Engine:</strong> {{ offer.engine  | titlecase }}</li>
+        <li><strong>Transmission:</strong> {{ offer.transmission  | titlecase }}</li>
+        <li><strong>Description:</strong> {{ offer.description }}</li>
+        <li><strong>Seller:</strong> {{ offer.sellerFullName }} ({{ offer.sellerEmail }})</li>
       </ul>
 
       <div class="offer-actions">
@@ -31,7 +31,9 @@
   <!-- Comments Section -->
   <section class="comments-section">
     <h3 class="comments-title">User Comments</h3>
-    <app-comments-list />
+    @for (comment of offer.comments; track $index) {
+      <app-comments-list [comment]="comment" />
+    }
     <app-comment-add />
   </section>
 

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {CommentType} from '../../types/comment';
 
 @Component({
   selector: 'app-comments-list',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './comments-list.component.css'
 })
 export class CommentsListComponent {
+  @Input() comment!: CommentType;
 
 }

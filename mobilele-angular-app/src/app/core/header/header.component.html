@@ -1,7 +1,7 @@
 <div>
   <nav class="header-navbar">
-    <a href="/" class="brand">
-      <img src="/img/car.png" alt="car picture" class="logo">
+    <a routerLink="/home" class="brand">
+      <img src="/images/car.png" alt="car picture" class="logo">
     </a>
 
     <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
@@ -10,29 +10,33 @@
 
     <div class="nav-menu" id="nav-menu">
       <ul class="nav-list">
-        <li><a href="/brands/all" class="nav-link">All Brands</a></li>
-        <li><a href="/offers/add" class="nav-link">Add Offer</a></li>
-        <li><a href="/offers/all" class="nav-link">All Offers</a></li>
-
         <li class="nav-dropdown">
-          <a href="#" class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Admin</a>
+          <a routerLink="/brands" class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Brands</a>
           <ul class="dropdown-menu">
-            <li><a href="/" class="dropdown-item">Action</a></li>
-            <li><a href="/" class="dropdown-item">Another action</a></li>
+            <li><a href="/" class="dropdown-item">Audi</a></li>
             <li class="dropdown-divider"></li>
-            <li><a href="/" class="dropdown-item">Something else here</a></li>
+            <li><a href="/" class="dropdown-item">Mercedes Benz</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a href="/" class="dropdown-item">BMW</a></li>
           </ul>
         </li>
 
-        <li>
-          <div class="user-section">
-            <span class="logged-user">Welcome, Gosho</span>
-            <a href="/users/logout" class="nav-link">Logout</a>
-          </div>
-        </li>
 
-        <li><a href="/users/register" class="nav-link">Register</a></li>
-        <li><a href="/users/login" class="nav-link">Login</a></li>
+        <li><a routerLink="/offers" class="nav-link">Offers</a></li>
+        <li><a routerLink="/offers" class="nav-link">Search Offers</a></li>
+
+        @if (isLogged) {
+          <li><a routerLink="/offers/add" class="nav-link">Add Offer</a></li>
+          <li>
+            <div class="user-section">
+              <span class="logged-user">Welcome, {{username}}</span>
+              <a (click)="logout()" class="nav-link">Logout</a>
+            </div>
+          </li>
+        } @else {
+          <li><a routerLink="/users/register" class="nav-link">Register</a></li>
+          <li><a routerLink="/users/login" class="nav-link">Login</a></li>
+        }
       </ul>
     </div>
   </nav>
