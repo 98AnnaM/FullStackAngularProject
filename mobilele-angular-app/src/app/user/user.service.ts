@@ -1,26 +1,28 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Subscription, tap } from 'rxjs';
 import { AuthenticatedUser } from '../types/authenticated-user';
-import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
-  private currentUser$$ = new BehaviorSubject<AuthenticatedUser | null>(null);
-  currentUser$ = this.currentUser$$.asObservable();
+export class UserService implements OnDestroy {
+  private user$$ = new BehaviorSubject<AuthenticatedUser | null>(null);
+
+  user: AuthenticatedUser | null = null;
+  private userSubscription: Subscription;
 
   constructor(private http: HttpClient) {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      this.currentUser$$.next(JSON.parse(storedUser));
+    this.userSubscription = this.user$$.subscribe(user => {
+      this.user = user;
+    });
+
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      this.user$$.next(JSON.parse(savedUser));
     }
   }
 
   get isLogged(): boolean {
-    return !!this.currentUser$$.value;
-  }
-
-  get user(): AuthenticatedUser | null {
-    return this.currentUser$$.value;
+    return this.user !== null;
   }
 
   login(email: string, password: string) {
@@ -30,7 +32,7 @@ export class UserService {
         tap(user => {
           localStorage.setItem('user', JSON.stringify(user));
           localStorage.setItem('token', user.token);
-          this.currentUser$$.next(user);
+          this.user$$.next(user);
         })
       );
   }
@@ -38,6 +40,15 @@ export class UserService {
   logout(): void {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    this.currentUser$$.next(null);
+    this.user$$.next(null);
+  }
+
+  register(firstName: string, lastName: string, email: string, password: any, confirmPassword: any) {
+    return this.http.post('http://localhost:8080/users/register', { firstName, lastName, email, password, confirmPassword })
+      .pipe(tap((result) => {}));
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   }
 }

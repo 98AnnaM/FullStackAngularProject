@@ -1,51 +1,133 @@
 <div class="container register-container">
   <h2 class="register-title">Register User</h2>
 
-  <form method="POST" class="register-form">
+  <form (ngSubmit)="register()" [formGroup]="form" class="register-form">
 
+    <!-- First Name & Last Name -->
     <div class="row">
       <div class="form-group col-half">
-        <label for="firstName" class="form-label">First Name</label>
-        <input id="firstName" type="text" minlength="2" maxlength="20"
-               class="form-input" placeholder="First name" />
-        <p class="errors">First name is required.</p>
+        <label class="form-label" for="firstName">First Name</label>
+        <input class="form-input" formControlName="firstName" id="firstName" autocomplete="first-name" placeholder="First name" type="text" />
+        @if (form.get('firstName')?.touched) {
+          <div>
+            @if (form.get('firstName')?.errors?.['required']) {
+              <p class="errors">First name is required.</p>
+            }
+            @if (form.get('firstName')?.errors?.['minlength']) {
+              <p class="errors">First name must be at least 2 characters!</p>
+            }
+            @if (form.get('firstName')?.errors?.['maxlength']) {
+              <p class="errors">First name must be max 15 characters!</p>
+            }
+          </div>
+        }
+
+        @if (form.get('firstName')?.errors?.['backend']) {
+          <p class="errors">{{ form.get('firstName')?.errors?.['backend'] }}</p>
+        }
       </div>
 
       <div class="form-group col-half">
-        <label for="lastName" class="form-label">Last Name</label>
-        <input id="lastName" type="text" minlength="2" maxlength="20"
-               class="form-input" placeholder="Last name" />
-        <p class="errors">Last name is required.</p>
+        <label class="form-label" for="lastName">Last Name</label>
+        <input class="form-input" formControlName="lastName" id="lastName" autocomplete="last-name" placeholder="Last name" type="text" />
+        @if (form.get('lastName')?.touched) {
+          <div>
+            @if (form.get('lastName')?.errors?.['required']) {
+              <p class="errors">Last name is required.</p>
+            }
+            @if (form.get('lastName')?.errors?.['minlength']) {
+              <p class="errors">Last name must be at least 2 characters!</p>
+            }
+            @if (form.get('lastName')?.errors?.['maxlength']) {
+              <p class="errors">Last name must be max 15 characters!</p>
+            }
+          </div>
+        }
+
+        @if (form.get('lastName')?.errors?.['backend']) {
+          <p class="errors">{{ form.get('lastName')?.errors?.['backend'] }}</p>
+        }
       </div>
     </div>
 
+    <!-- Email -->
     <div class="row">
       <div class="form-group col-half">
-        <label for="username" class="form-label">Username</label>
-        <input id="username" type="text" minlength="2" maxlength="20"
-               class="form-input" placeholder="Username" />
-        <p class="errors">Username is required.</p>
-      </div>
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" formControlName="email" id="email" autocomplete="email" placeholder="Email" type="text" />
+        @if (form.get('email')?.touched) {
+          <div>
+            @if (form.get('email')?.errors?.['required']) {
+              <p class="errors">Email is required!</p>
+            }
+            @if (form.get('email')?.errors?.['emailValidator']) {
+              <p class="errors">Email is not valid!</p>
+            }
+          </div>
+        }
 
-      <div class="form-group col-half">
-        <label for="password" class="form-label">Password</label>
-        <input id="password" type="password" minlength="2" maxlength="20"
-               class="form-input" placeholder="Password" />
-        <p class="errors">Password is required.</p>
+        @if (form.get('email')?.errors?.['backend']) {
+          <p class="errors">{{ form.get('email')?.errors?.['backend'] }}</p>
+        }
       </div>
     </div>
 
-    <div class="row">
-      <div class="form-group col-half">
-        <label for="repeatPassword" class="form-label">Repeat Password</label>
-        <input id="repeatPassword" type="password" minlength="2" maxlength="20"
-               class="form-input" placeholder="Repeat password" />
-        <p class="errors">Repeat password is required.</p>
-      </div>
-    </div>
+    <!-- Password & Repeat Password (Grouped) -->
+    <ng-container formGroupName="passwordGroup">
+      <div class="row">
+        <div class="form-group col-half">
+          <label class="form-label" for="password">Password</label>
+          <input class="form-input" id="password" autocomplete="new-password" placeholder="Password" type="password" formControlName="password" />
+          @if (form.get('passwordGroup.password')?.touched) {
+            <div>
+              @if (form.get('passwordGroup.password')?.errors?.['required']) {
+                <p class="errors">Password is required!</p>
+              }
+              @if (form.get('passwordGroup.password')?.errors?.['minlength']) {
+                <p class="errors">Password must be at least 5 characters!</p>
+              }
+              @if (form.get('passwordGroup.password')?.errors?.['maxlength']) {
+                <p class="errors">Password must be max 10 characters!</p>
+              }
+            </div>
+          }
 
+          @if (form.get('passwordGroup.password')?.errors?.['backend']) {
+            <p class="errors">{{ form.get('passwordGroup.password')?.errors?.['backend'] }}</p>
+          }
+        </div>
+
+        <div class="form-group col-half">
+          <label class="form-label" for="repeatPassword">Repeat Password</label>
+          <input class="form-input" id="repeatPassword" autocomplete="new-password" placeholder="Repeat password" type="password" formControlName="rePassword" />
+          @if (form.get('passwordGroup.rePassword')?.touched) {
+            <div>
+              @if (form.get('passwordGroup.rePassword')?.errors?.['required']) {
+                <p class="errors">Repeat password is required!</p>
+              } @else {
+                @if (form.get('passwordGroup')?.errors?.['matchPasswordsValidator']) {
+                  <p class="errors">Passwords do not match!</p>
+                }
+              }
+            </div>
+          }
+
+          @if (form.get('passwordGroup.rePassword')?.errors?.['backend']) {
+            <p class="errors">{{ form.get('passwordGroup.rePassword')?.errors?.['backend'] }}</p>
+          }
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Submit -->
     <div class="button-holder">
-      <input type="submit" class="btn-submit" value="Submit Registration" />
+      <button class="btn-submit"
+              [disabled]="form.invalid"
+              [style]="{ backgroundColor: form.invalid ? 'grey' : '#4ebced' }"
+      >
+        Register
+      </button>
     </div>
+
   </form>
 </div>
