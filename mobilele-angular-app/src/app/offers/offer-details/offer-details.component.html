@@ -21,8 +21,13 @@
       </ul>
 
       <div class="offer-actions">
+
         <a href="#" class="btn-action">Update</a>
-        <a href="#" class="btn-action btn-danger">Delete</a>
+
+        @if (offer.canDelete) {
+          <button class="btn-action btn-danger" (click)="deleteOffer()">Delete</button>
+        }
+
       </div>
     </div>
   </div>

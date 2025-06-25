@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final OfferRepository offerRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final CommentRepository commentRepository;
 
-    public CommentService(OfferRepository offerRepository, UserRepository userRepository, CommentRepository commentRepository) {
+    public CommentService(OfferRepository offerRepository, UserService userService, CommentRepository commentRepository) {
         this.offerRepository = offerRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.commentRepository = commentRepository;
     }
 
@@ -60,8 +60,7 @@ public class CommentService {
         OfferEntity offer = offerRepository.findById(commentServiceModel.getOfferId())
                 .orElseThrow(() -> new UnsupportedOperationException("Offer with id " + commentServiceModel.getOfferId() + " not found!"));
 
-        UserEntity creator = userRepository.findByEmail(commentServiceModel.getCreatorEmail())
-                .orElseThrow(() -> new UnsupportedOperationException("User with email " + commentServiceModel.getCreatorEmail() + " not found!"));
+        UserEntity creator = userService.getUserByEmail(commentServiceModel.getCreatorEmail());
 
         CommentEntity newComment = new CommentEntity();
         newComment.setTextContent(commentServiceModel.getMessage());
@@ -81,25 +80,17 @@ public class CommentService {
         return mapAsComment(deleted, principalEmail);
     }
 
+    public void deleteAllCommentsByOfferId(Long offerId) {
+        this.commentRepository.deleteAllByOffer_id(offerId);
+    }
+
     public boolean isAuthorOrAdmin(String userEmail, Long commentId) {
         boolean isOwner = commentRepository.
                 findById(commentId).
                 filter(c -> c.getAuthor().getEmail().equals(userEmail)).
                 isPresent();
 
-        if (isOwner) {
-            return true;
-        }
-
-        return userRepository
-                .findByEmail(userEmail)
-                .filter(this::isAdmin)
-                .isPresent();
+        return isOwner || this.userService.isUserAdmin(userEmail);
     }
 
-    private boolean isAdmin(UserEntity user) {
-        return user.getUserRoles().
-                stream().
-                anyMatch(r -> r.getUserRole() == UserRoleEnum.ADMIN);
-    }
 }

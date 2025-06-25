@@ -7,15 +7,14 @@ import bg.softuni.mobilelele.model.dto.OfferSearchDTO;
 import bg.softuni.mobilelele.model.entity.ModelEntity;
 import bg.softuni.mobilelele.model.entity.OfferEntity;
 import bg.softuni.mobilelele.model.entity.UserEntity;
-import bg.softuni.mobilelele.model.enums.UserRoleEnum;
 import bg.softuni.mobilelele.model.mapper.CommentMapper;
 import bg.softuni.mobilelele.model.mapper.OfferMapper;
 import bg.softuni.mobilelele.repository.ModelRepository;
 import bg.softuni.mobilelele.repository.OfferRepository;
 import bg.softuni.mobilelele.repository.OfferSpecification;
-import bg.softuni.mobilelele.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,25 +26,22 @@ public class OfferService {
     private final OfferMapper offerMapper;
     private final CommentMapper commentMapper;
     private final CommentService commentService;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ModelRepository modelRepository;
 
-    public OfferService(OfferRepository offerRepository, OfferMapper offerMapper, CommentMapper commentMapper, CommentService commentService, UserRepository userRepository, ModelRepository modelRepository) {
+    public OfferService(OfferRepository offerRepository, OfferMapper offerMapper, CommentMapper commentMapper, CommentService commentService, UserService userService, ModelRepository modelRepository) {
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
         this.commentMapper = commentMapper;
         this.commentService = commentService;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.modelRepository = modelRepository;
-
     }
 
     public OfferDetailDTO addOffer(OfferAddOrEditDto addOfferDto, UserDetails userDetails) {
         OfferEntity newOffer = offerMapper.addOrEditOfferDtoToOfferEntity(addOfferDto);
 
-        UserEntity seller = this.userRepository
-                .findByEmail(userDetails.getUsername())
-                .orElseThrow();
+        UserEntity seller = this.userService.getUserByEmail(userDetails.getUsername());
 
         ModelEntity model = this.modelRepository
                 .findById(addOfferDto.getModelId())
@@ -55,7 +51,6 @@ public class OfferService {
         newOffer.setSeller(seller);
 
         return offerMapper.offerEntityToOfferDetailDto(this.offerRepository.save(newOffer));
-
     }
 
     public List<OfferDetailDTO> findAllOfferDetailDto() {
@@ -90,7 +85,7 @@ public class OfferService {
                             .toList();
 
                     offerDetailDTO.setComments(comments);
-                    offerDetailDTO.setCanDelete(isOfferOwner(currentUser, offerID));
+                    offerDetailDTO.setCanDelete(isOfferOwner(currentUser, offerID) || this.userService.isUserAdmin(currentUser));
 
                     return offerDetailDTO;
                 });
@@ -102,8 +97,10 @@ public class OfferService {
                 map(offerMapper::offerEntityToAddOfferDto);
     }
 
+    @Transactional
     public void deleteOfferById(Long offerId) {
-        offerRepository.deleteById(offerId);
+        this.commentService.deleteAllCommentsByOfferId(offerId);
+        this.offerRepository.deleteById(offerId);
     }
 
     public boolean isOfferOwner(String userName, Long offerId) {
@@ -116,7 +113,8 @@ public class OfferService {
 
     public OfferDetailDTO updateOfferById(OfferAddOrEditDto addOrEditOfferDto, Long id, UserDetails userDetails) {
         OfferEntity updateOffer = offerMapper.addOrEditOfferDtoToOfferEntity(addOrEditOfferDto);
-        updateOffer.setSeller(userRepository.findByEmail(userDetails.getUsername()).orElseThrow());
+        updateOffer.setId(id);
+        updateOffer.setSeller(userService.getUserByEmail(userDetails.getUsername()));
         updateOffer.setModel(modelRepository.findById(addOrEditOfferDto.getModelId()).orElseThrow());
         return offerMapper.offerEntityToOfferDetailDto(offerRepository.save(updateOffer));
     }

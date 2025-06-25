@@ -72,8 +72,9 @@ public class UserService {
                 preferedLocale);
     }
 
-    public boolean emailExists(String email) {
-        return this.userRepository.existsByEmail(email);
+    public UserEntity getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new UnsupportedOperationException("User with email " + email + " not found!"));
     }
 
     public boolean isUserAdmin(String userName) {

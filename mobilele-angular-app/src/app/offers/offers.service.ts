@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {OfferView} from '../types/offerView';
 import {OfferAdd} from '../types/offerAdd';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,9 @@ export class OffersService {
 
   createOffer(offerAdd: OfferAdd) {
     return this.http.post<OfferView>('http://localhost:8080/offers/add', offerAdd);
+  }
+
+  deleteOffer(id: string): Observable<void> {
+    return this.http.delete<void>(`http://localhost:8080/offers/${id}`);
   }
 }
