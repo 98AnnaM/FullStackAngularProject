@@ -4,6 +4,7 @@ import {UserService} from '../user.service';
 import {Router} from '@angular/router';
 import {DOMAINS} from '../../constants';
 import {EmailDirective} from '../../directives/email.directive';
+import {UserLoginRequest} from '../../types/userLoginRequest';
 
 @Component({
   selector: 'app-login',
@@ -27,9 +28,9 @@ export class LoginComponent {
       return;
     }
 
-    const { email, password } = form.value;
+    const userLoginRequest: UserLoginRequest = form.value;
 
-    this.userService.login(email, password).subscribe({
+    this.userService.login(userLoginRequest).subscribe({
       next: () => {
         this.badCredentials = false;
         this.router.navigate(['/home']);

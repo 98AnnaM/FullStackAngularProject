@@ -1,13 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subscription, tap } from 'rxjs';
-import { AuthenticatedUser } from '../types/authenticated-user';
+import { UserLoginResponse } from '../types/userLoginResponse';
+import {UserRegisterRequest} from '../types/userRegisterRequest';
+import {UserLoginRequest} from '../types/userLoginRequest';
 
 @Injectable({ providedIn: 'root' })
 export class UserService implements OnDestroy {
-  private user$$ = new BehaviorSubject<AuthenticatedUser | null>(null);
+  private user$$ = new BehaviorSubject<UserLoginResponse | null>(null);
 
-  user: AuthenticatedUser | null = null;
+  user: UserLoginResponse | null = null;
   private userSubscription: Subscription;
 
   constructor(private http: HttpClient) {
@@ -25,9 +27,9 @@ export class UserService implements OnDestroy {
     return this.user !== null;
   }
 
-  login(email: string, password: string) {
+  login(userLoginRequest: UserLoginRequest) {
     return this.http
-      .post<AuthenticatedUser>('http://localhost:8080/users/login', { email, password })
+      .post<UserLoginResponse>('http://localhost:8080/users/login', userLoginRequest)
       .pipe(
         tap(user => {
           localStorage.setItem('user', JSON.stringify(user));
@@ -43,8 +45,8 @@ export class UserService implements OnDestroy {
     this.user$$.next(null);
   }
 
-  register(firstName: string, lastName: string, email: string, password: any, confirmPassword: any) {
-    return this.http.post('http://localhost:8080/users/register', { firstName, lastName, email, password, confirmPassword })
+  register(userRegisterRequest: UserRegisterRequest) {
+    return this.http.post('http://localhost:8080/users/register', userRegisterRequest)
       .pipe(tap((result) => {}));
   }
 

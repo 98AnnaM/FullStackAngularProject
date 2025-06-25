@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {emailValidator} from '../../utils/email.validator';
+import {emailValidator} from '../../validators/email.validator';
 import {DOMAINS} from '../../constants';
-import {matchPasswordsValidator} from '../../utils/match-passwords.validator';
+import {matchPasswordsValidator} from '../../validators/match-passwords.validator';
 import {Router} from '@angular/router';
 import {UserService} from '../user.service';
 import {FormErrorService} from '../../form-error.service';
+import {UserRegisterRequest} from '../../types/userRegisterRequest';
 
 @Component({
   selector: 'app-register',
@@ -39,15 +40,16 @@ export class RegisterComponent {
       return;
     }
 
-    const {
-      firstName,
-      lastName,
-      email,
-      passwordGroup: {password, rePassword} = {},
-    } = this.form.value;
+    const v = this.form.value!;
+    const userRegisterRequest: UserRegisterRequest = {
+      firstName: v.firstName!,
+      lastName: v.lastName!,
+      email: v.email!,
+      password: v.passwordGroup?.password!,
+      confirmPassword: v.passwordGroup?.rePassword!,
+    };
 
-
-    this.userService.register(firstName!, lastName!, email!, password!, rePassword!)
+    this.userService.register(userRegisterRequest)
       .subscribe({
         next: () => this.router.navigate(['/users/login']),
         error: err => {

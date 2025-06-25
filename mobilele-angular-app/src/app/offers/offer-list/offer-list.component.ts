@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Offer} from '../../types/offer';
-import {ApiService} from '../../api.service';
+import {OfferView} from '../../types/offerView';
 import {CommonModule} from '@angular/common';
 import {LoaderComponent} from '../../shared/loader/loader.component';
 import {RouterLink} from '@angular/router';
+import {OffersService} from '../offers.service';
 
 @Component({
   selector: 'app-offer-list',
@@ -13,14 +13,14 @@ import {RouterLink} from '@angular/router';
   styleUrl: './offer-list.component.css'
 })
 export class OfferListComponent implements OnInit{
-  offers: Offer[] = [];
+  offers: OfferView[] = [];
   isLoading: boolean = true;
 
-  constructor(private apiService: ApiService) {
+  constructor(private offerService: OffersService) {
   }
 
   ngOnInit(): void {
-    this.apiService.getOffers().subscribe(offers => {
+    this.offerService.getOffers().subscribe(offers => {
         this.offers = offers;
         this.isLoading = false;
       }

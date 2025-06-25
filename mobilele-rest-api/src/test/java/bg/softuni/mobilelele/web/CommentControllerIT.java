@@ -66,7 +66,7 @@ public class CommentControllerIT {
 
     @Test
     void testDeleteByAnonymousUser_Unauthorized() throws Exception {
-        mockMvc.perform(delete("/offers/{offerId}/comments/{commentId}", testOffer.getId(), userComment.getId())
+        mockMvc.perform(delete("/comments/{commentId}", userComment.getId())
                         .with(csrf()))
                 .andExpect(status().isForbidden());
     }
@@ -74,7 +74,7 @@ public class CommentControllerIT {
     @Test
     @WithMockUser(username = "testadmin@example.com", roles = {"ADMIN", "USER"})
     void testDeleteByAdmin() throws Exception {
-        mockMvc.perform(delete("/offers/{offerId}/comments/{commentId}", testOffer.getId(), userComment.getId())
+        mockMvc.perform(delete("/comments/{commentId}", userComment.getId())
                         .with(csrf()))
                 .andExpect(status().isOk());
     }
@@ -82,7 +82,7 @@ public class CommentControllerIT {
     @Test
     @WithMockUser(username = "testuser@example.com", roles = "USER")
     void testDeleteByOwner() throws Exception {
-        mockMvc.perform(delete("/offers/{offerId}/comments/{commentId}", testOffer.getId(), userComment.getId())
+        mockMvc.perform(delete("/comments/{commentId}", userComment.getId())
                         .with(csrf()))
                 .andExpect(status().isOk());
     }
@@ -90,7 +90,7 @@ public class CommentControllerIT {
     @Test
     @WithMockUser(username = "testuser@example.com", roles = "USER")
     void testDeleteNotOwned_Forbidden() throws Exception {
-        mockMvc.perform(delete("/offers/{offerId}/comments/{commentId}", testOffer.getId(), adminComment.getId())
+        mockMvc.perform(delete("/comments/{commentId}", adminComment.getId())
                         .with(csrf()))
                 .andExpect(status().isForbidden());
     }

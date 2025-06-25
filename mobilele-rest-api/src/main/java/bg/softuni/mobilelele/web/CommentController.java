@@ -53,9 +53,9 @@ public class CommentController {
                 .body(newComment);
     }
 
-    @DeleteMapping("/offers/{offerId}/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<CommentViewDto> deleteComment(
-            @PathVariable("commentId") Long commentId, @PathVariable("offerId") Long offerId,
+            @PathVariable("commentId") Long commentId,
             @AuthenticationPrincipal UserDetails principal) {
 
         if (principal != null && commentService.isAuthorOrAdmin(principal.getUsername(), commentId)) {

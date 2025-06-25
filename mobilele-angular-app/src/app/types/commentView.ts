@@ -1,5 +1,5 @@
 
-export interface CommentType {
+export interface CommentView {
   commentId: number;
   message: string;
   user: string;

@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('authToken'); // or sessionStorage.getItem()
+  const token = localStorage.getItem('token');
 
   if (!token) {
     return next(req); // no token → send original request

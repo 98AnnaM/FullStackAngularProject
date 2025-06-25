@@ -1,6 +1,6 @@
 import {Directive, Input} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from '@angular/forms';
-import {emailValidator} from '../utils/email.validator';
+import {emailValidator} from '../validators/email.validator';
 
 @Directive({
   selector: '[appEmail]',

@@ -1,8 +1,8 @@
 import {EngineEnum} from '../enums/engine-enum';
 import {TransmissionEnum} from '../enums/transmission-enum';
-import {CommentType} from './comment';
+import {CommentView} from './commentView';
 
-export interface Offer {
+export interface OfferView {
   id: number;
   imageUrl: string;
   year: number;
@@ -17,7 +17,7 @@ export interface Offer {
   sellerEmail: string;
   canDelete: boolean;
   description: string;
-  comments: CommentType[];
+  comments: CommentView[];
   offerHighlight: string;
   sellerFullName: string;
 }

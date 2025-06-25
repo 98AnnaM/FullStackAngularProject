@@ -32,9 +32,13 @@
   <section class="comments-section">
     <h3 class="comments-title">User Comments</h3>
     @for (comment of offer.comments; track $index) {
-      <app-comments-list [comment]="comment" />
+      <app-comments-list [comment]="comment" (commentDeleted)="reFetchCommentsList()"/>
     }
-    <app-comment-add />
+
+    @if (isLoggedIn) {
+      <app-comment-add (newCommentAdded)="reFetchCommentsList()" />
+    }
+
   </section>
 
 </div>

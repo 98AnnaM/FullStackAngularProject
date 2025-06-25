@@ -54,4 +54,4 @@ Once started, the application automatically initializes:
 ### 💬 Comments
 - `GET /offers/{offerId}/comments` – Get all comments for an offer
 - `POST /offers/{offerId}/comments` – Post comment (authenticated users only)
-- `DELETE /offers/{offerId}/comments/{commentId}` – Delete comment (owner or admin only)
+- `DELETE /comments/{commentId}` – Delete comment (owner or admin only)

@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {CommentAddComponent} from '../../comments/comment-add/comment-add.component';
 import {CommentsListComponent} from '../../comments/comments-list/comments-list.component';
-import {Offer} from '../../types/offer';
+import {OfferView} from '../../types/offerView';
 import {ActivatedRoute} from '@angular/router';
-import {ApiService} from '../../api.service';
 import {UserService} from '../../user/user.service';
 import {TitleCasePipe} from '@angular/common';
+import {CommentView} from '../../types/commentView';
+import {OffersService} from '../offers.service';
+import {CommentsService} from '../../comments/comments.service';
 
 @Component({
   selector: 'app-offer-details',
@@ -19,11 +21,16 @@ import {TitleCasePipe} from '@angular/common';
   styleUrl: './offer-details.component.css'
 })
 export class OfferDetailsComponent  implements OnInit {
-offer = {} as Offer;
+offer = {} as OfferView;
 
   constructor(private route: ActivatedRoute,
-              private apiService: ApiService,
+              private offerService: OffersService,
+              private commentsService: CommentsService,
               private userService: UserService) {
+  }
+
+  get isLoggedIn(): boolean {
+    return this.userService.isLogged;
   }
 
   ngOnInit(): void {
@@ -32,9 +39,16 @@ offer = {} as Offer;
     // });
 
     const id = this.route.snapshot.params['offerId'];
-      this.apiService.getSingleOffer(id).subscribe((offer) => {
+      this.offerService.getSingleOffer(id).subscribe((offer) => {
         this.offer = offer;
     });
   }
 
+  reFetchCommentsList(): void {
+    const offerId = this.route.snapshot.params['offerId'];
+
+    this.commentsService.getComments(offerId).subscribe((comments: CommentView[]) => {
+      this.offer.comments = comments;
+    });
+  }
 }
