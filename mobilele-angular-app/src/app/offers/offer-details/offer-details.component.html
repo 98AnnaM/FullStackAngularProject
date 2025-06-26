@@ -22,7 +22,9 @@
 
       <div class="offer-actions">
 
-        <a href="#" class="btn-action">Update</a>
+        @if (offer.canUpdate) {
+          <a (click)="goToEdit(offer)" class="btn-action">Update</a>
+        }
 
         @if (offer.canDelete) {
           <button class="btn-action btn-danger" (click)="deleteOffer()">Delete</button>

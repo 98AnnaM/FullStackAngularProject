@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CommentAddComponent} from '../../comments/comment-add/comment-add.component';
 import {CommentsListComponent} from '../../comments/comments-list/comments-list.component';
 import {OfferView} from '../../types/offerView';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {UserService} from '../../user/user.service';
 import {TitleCasePipe} from '@angular/common';
 import {CommentView} from '../../types/commentView';
@@ -15,7 +15,8 @@ import {CommentsService} from '../../comments/comments.service';
   imports: [
     CommentAddComponent,
     CommentsListComponent,
-    TitleCasePipe
+    TitleCasePipe,
+    RouterLink
   ],
   templateUrl: './offer-details.component.html',
   styleUrl: './offer-details.component.css'
@@ -70,5 +71,9 @@ isDeleting: boolean = false;
         console.error('Failed to delete offer:', err);
       }
     });
+  }
+
+  goToEdit(offer: OfferView) {
+    this.router.navigate(['/offers', offer.id, 'edit'], { state: { offer } });
   }
 }

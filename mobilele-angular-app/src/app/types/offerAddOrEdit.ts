@@ -1,7 +1,7 @@
 import {EngineEnum} from '../enums/engine-enum';
 import {TransmissionEnum} from '../enums/transmission-enum';
 
-export interface OfferAdd {
+export interface OfferAddOrEdit {
   modelId: number;
   price: number;
   year: number;

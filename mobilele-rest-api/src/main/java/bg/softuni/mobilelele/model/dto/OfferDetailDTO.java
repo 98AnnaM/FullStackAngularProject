@@ -21,6 +21,7 @@ public class OfferDetailDTO {
     private String sellerLastName;
     private String sellerEmail;
     private boolean canDelete;
+    private boolean canUpdate;
     private String description;
     private List<CommentViewDto> comments;
 
@@ -156,5 +157,13 @@ public class OfferDetailDTO {
 
     public void setComments(List<CommentViewDto> comments) {
         this.comments = comments;
+    }
+
+    public boolean isCanUpdate() {
+        return canUpdate;
+    }
+
+    public void setCanUpdate(boolean canUpdate) {
+        this.canUpdate = canUpdate;
     }
 }

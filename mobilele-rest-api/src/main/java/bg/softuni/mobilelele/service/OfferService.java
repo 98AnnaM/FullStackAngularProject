@@ -86,6 +86,7 @@ public class OfferService {
 
                     offerDetailDTO.setComments(comments);
                     offerDetailDTO.setCanDelete(isOfferOwner(currentUser, offerID) || this.userService.isUserAdmin(currentUser));
+                    offerDetailDTO.setCanUpdate(isOfferOwner(currentUser, offerID));
 
                     return offerDetailDTO;
                 });

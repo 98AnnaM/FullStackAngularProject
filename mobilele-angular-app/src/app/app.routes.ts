@@ -7,6 +7,7 @@ import {OfferDetailsComponent} from './offers/offer-details/offer-details.compon
 import {OfferAddComponent} from './offers/offer-add/offer-add.component';
 import {ErrorPageNotFoundComponent} from './error-page-not-found/error-page-not-found.component';
 import {BrandsListComponent} from './brands/brands-list/brands-list.component';
+import {OfferUpdateComponent} from './offers/offer-update/offer-update.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -20,7 +21,8 @@ export const routes: Routes = [
   {path: 'offers', children: [
       {path: 'add', component: OfferAddComponent },
       {path: '', component: OfferListComponent},
-      {path: ':offerId', component: OfferDetailsComponent }
+      {path: ':offerId', component: OfferDetailsComponent },
+      {path: ':offerId/edit', component: OfferUpdateComponent}
     ]},
 
   {path: 'brands', component: BrandsListComponent},

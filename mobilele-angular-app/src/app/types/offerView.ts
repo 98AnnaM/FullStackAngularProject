@@ -8,6 +8,7 @@ export interface OfferView {
   year: number;
   brandName: string;
   modelName: string;
+  modelId: number;
   mileage: number;
   price: number;
   engine: EngineEnum;
@@ -16,6 +17,7 @@ export interface OfferView {
   sellerLastName: string;
   sellerEmail: string;
   canDelete: boolean;
+  canUpdate: boolean;
   description: string;
   comments: CommentView[];
   offerHighlight: string;
