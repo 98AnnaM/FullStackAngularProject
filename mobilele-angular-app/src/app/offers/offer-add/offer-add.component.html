@@ -1,3 +1,4 @@
+
 <div class="offer-add-container">
   <h2 class="page-title">Create a Car Sale Offer</h2>
 
@@ -6,8 +7,8 @@
     <!-- Row 1: Model and Price -->
     <div class="form-row">
       <div class="form-group">
-        <label for="model">Model</label>
-        <select id="model" formControlName="modelId">
+        <label for="model" class="form-label">Model</label>
+        <select id="model" formControlName="modelId" class="form-control">
 
           <option [ngValue]="null" disabled selected>- Select a model -</option>
           @for (brand of brands; track $index) {
@@ -26,8 +27,8 @@
       </div>
 
       <div class="form-group">
-        <label for="price">Price (€)</label>
-        <input id="price" formControlName="price" type="number" placeholder="Suggested price" />
+        <label for="price" class="form-label">Price (€)</label>
+        <input id="price" formControlName="price" type="number" class="form-control" placeholder="Suggested price" />
 
         @if (form.get('price')?.touched && form.get('price')?.errors?.['required']) {
           <p class="form-error">Suggested price is required.</p>
@@ -44,8 +45,8 @@
     <div class="form-row">
 
       <div class="form-group">
-        <label for="engine">Engine Type</label>
-        <select id="engine" formControlName="engine">
+        <label for="engine" class="form-label">Engine Type</label>
+        <select id="engine" formControlName="engine"  class="form-control">
 
           <option value="" disabled selected>- Select engine type -</option>
           @for (engineType of engineTypes; track $index) {
@@ -59,8 +60,8 @@
       </div>
 
       <div class="form-group">
-        <label for="transmission">Transmission</label>
-        <select id="transmission" formControlName="transmission">
+        <label for="transmission" class="form-label">Transmission</label>
+        <select id="transmission" formControlName="transmission"  class="form-control">
 
           <option value="" disabled selected>- Select transmission -</option>
           @for (transmission of transmissionTypes; track $index) {
@@ -78,8 +79,8 @@
     <!-- Row 3: Year and Mileage -->
     <div class="form-row">
       <div class="form-group">
-        <label for="year">Manufacture Year</label>
-        <input id="year" type="number" formControlName="year" placeholder="e.g. 2020" />
+        <label for="year" class="form-label">Manufacture Year</label>
+        <input id="year" type="number" formControlName="year" placeholder="e.g. 2020" class="form-control"/>
         @if (form.get('year')?.touched && form.get('year')?.errors?.['required']) {
           <p class="form-error">Manufacturing year is required.</p>
         }
@@ -91,8 +92,8 @@
       </div>
 
       <div class="form-group">
-        <label for="mileage">Mileage (km)</label>
-        <input id="mileage" type="number" formControlName="mileage" placeholder="e.g. 75000" />
+        <label for="mileage" class="form-label">Mileage (km)</label>
+        <input id="mileage" type="number" formControlName="mileage" class="form-control" placeholder="e.g. 75000" />
 
         @if (form.get('mileage')?.touched && form.get('mileage')?.errors?.['required']) {
           <p class="form-error">Mileage in kilometers is required.</p>
@@ -107,8 +108,8 @@
 
     <!-- Row 4: Description -->
     <div class="form-group full-width">
-      <label for="description">Description</label>
-      <textarea id="description" formControlName="description" maxlength="500" rows="4" placeholder="Describe the vehicle..."></textarea>
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" formControlName="description" maxlength="500" rows="4" class="form-control" placeholder="Describe the vehicle..."></textarea>
       @if (form.get('description')?.touched && form.get('description')?.errors?.['required']) {
         <p class="form-error">Description is required.</p>
       }
@@ -116,8 +117,8 @@
 
     <!-- Row 5: ImageUrl -->
     <div class="form-group full-width">
-      <label for="imageUrl">Image URL</label>
-      <input id="imageUrl" formControlName="imageUrl" type="url" placeholder="https://example.com/car.jpg" />
+      <label for="imageUrl"  class="form-label">Image URL</label>
+      <input id="imageUrl" formControlName="imageUrl" type="url" class="form-control" placeholder="https://example.com/car.jpg" />
       @if (form.get('imageUrl')?.touched && form.get('description')?.errors?.['required']) {
         <p class="form-error">Vehicle image URL is required.</p>
       }

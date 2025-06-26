@@ -1,77 +1,137 @@
-<!-- Update Offer Page (No Bootstrap) -->
 <div class="page-wrapper">
-  <div class="offer-form">
-    <h2 class="form-title">Update Offer</h2>
 
-    <form method="POST" class="form-body">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="model" class="form-label">Model</label>
-          <select id="model" class="form-control">
-            <option value="">- Select a model -</option>
-            <optgroup label="Brand name">
-              <option>Model</option>
+<div class="offer-add-container">
+  <h2 class="page-title">Create a Car Sale Offer</h2>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="form-body" >
+
+    <!-- Row 1: Model and Price -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="model" class="form-label">Model</label>
+        <select id="model" formControlName="modelId" class="form-control">
+
+          <option [ngValue]="null" disabled selected>- Select a model -</option>
+          @for (brand of brands; track $index) {
+            <optgroup [label]="brand.name">
+              @for (model of brand.models; track $index) {
+                <option [ngValue]="model.id" >{{ model.name }}</option>
+              }
             </optgroup>
-          </select>
+          }
+        </select>
+
+        @if (form.get('modelId')?.touched && form.get('modelId')?.errors?.['required']) {
           <p class="form-error">Vehicle model is required.</p>
-        </div>
+        }
 
-        <div class="form-group">
-          <label for="price" class="form-label">Price</label>
-          <input id="price" type="number" min="0" step="100" class="form-control" placeholder="Suggested price" />
+      </div>
+
+      <div class="form-group">
+        <label for="price" class="form-label">Price (€)</label>
+        <input id="price" formControlName="price" type="number" class="form-control" placeholder="Suggested price" />
+
+        @if (form.get('price')?.touched && form.get('price')?.errors?.['required']) {
           <p class="form-error">Suggested price is required.</p>
-        </div>
-      </div>
+        }
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="engine" class="form-label">Engine</label>
-          <select id="engine" class="form-control">
-            <option value="">- Select engine type -</option>
-            <option>Engine type</option>
-          </select>
+        @if (form.get('price')?.touched && form.get('price')?.errors?.['wholeNumberBiggerThenValidator']) {
+          <p class="form-error">Suggested price must be positive whole number.</p>
+        }
+
+      </div>
+    </div>
+
+    <!-- Row 2: Engine and Transmission -->
+    <div class="form-row">
+
+      <div class="form-group">
+        <label for="engine" class="form-label">Engine Type</label>
+        <select id="engine" formControlName="engine"  class="form-control">
+
+          <option value="" disabled selected>- Select engine type -</option>
+          @for (engineType of engineTypes; track $index) {
+            <option [ngValue]="engineType">{{ engineType | titlecase }}</option>
+          }
+        </select>
+
+        @if (form.get('engine')?.touched && form.get('engine')?.errors?.['required']) {
           <p class="form-error">Engine type is required.</p>
-        </div>
+        }
+      </div>
 
-        <div class="form-group">
-          <label for="transmission" class="form-label">Transmission</label>
-          <select id="transmission" class="form-control">
-            <option value="">- Select transmission type -</option>
-            <option>Transmission type</option>
-          </select>
+      <div class="form-group">
+        <label for="transmission" class="form-label">Transmission</label>
+        <select id="transmission" formControlName="transmission"  class="form-control">
+
+          <option value="" disabled selected>- Select transmission -</option>
+          @for (transmission of transmissionTypes; track $index) {
+            <option [ngValue]="transmission">{{ transmission | titlecase }}</option>
+          }
+        </select>
+
+        @if (form.get('transmission')?.touched && form.get('transmission')?.errors?.['required']) {
           <p class="form-error">Transmission type is required.</p>
-        </div>
-      </div>
+        }
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="year" class="form-label">Year</label>
-          <input id="year" type="number" min="1900" max="2099" step="1" class="form-control" placeholder="Manufacturing year" />
+      </div>
+    </div>
+
+    <!-- Row 3: Year and Mileage -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="year" class="form-label">Manufacture Year</label>
+        <input id="year" type="number" formControlName="year" placeholder="e.g. 2020" class="form-control"/>
+        @if (form.get('year')?.touched && form.get('year')?.errors?.['required']) {
           <p class="form-error">Manufacturing year is required.</p>
-        </div>
+        }
 
-        <div class="form-group">
-          <label for="mileage" class="form-label">Mileage</label>
-          <input id="mileage" type="number" min="0" max="900000" step="1000" class="form-control" placeholder="Mileage in kilometers" />
+        @if (form.get('year')?.touched &&
+        (form.get('year')?.errors?.['wholeNumberBiggerThenValidator'] || form.get('year')?.errors?.['max'])) {
+          <p class="form-error">Manufacturing year must be whole number between 1990 till present.</p>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="mileage" class="form-label">Mileage (km)</label>
+        <input id="mileage" type="number" formControlName="mileage" class="form-control" placeholder="e.g. 75000" />
+
+        @if (form.get('mileage')?.touched && form.get('mileage')?.errors?.['required']) {
           <p class="form-error">Mileage in kilometers is required.</p>
-        </div>
-      </div>
+        }
 
-      <div class="form-group full-width">
-        <label for="description" class="form-label">Description</label>
-        <textarea id="description" class="form-control" rows="3" placeholder="Description"></textarea>
+        @if (form.get('mileage')?.touched &&
+        (form.get('mileage')?.errors?.['wholeNumberBiggerThenValidator'] || form.get('mileage')?.errors?.['max'])) {
+          <p class="form-error">Mileage must be whole number between 0 and 999 999km.</p>
+        }
+      </div>
+    </div>
+
+    <!-- Row 4: Description -->
+    <div class="form-group full-width">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" formControlName="description" maxlength="500" rows="4" class="form-control" placeholder="Describe the vehicle..."></textarea>
+      @if (form.get('description')?.touched && form.get('description')?.errors?.['required']) {
         <p class="form-error">Description is required.</p>
-      </div>
+      }
+    </div>
 
-      <div class="form-group full-width">
-        <label for="imageUrl" class="form-label">Image URL</label>
-        <input id="imageUrl" type="url" class="form-control" placeholder="Put vehicle image URL here" />
+    <!-- Row 5: ImageUrl -->
+    <div class="form-group full-width">
+      <label for="imageUrl"  class="form-label">Image URL</label>
+      <input id="imageUrl" formControlName="imageUrl" type="url" class="form-control" placeholder="https://example.com/car.jpg" />
+      @if (form.get('imageUrl')?.touched && form.get('description')?.errors?.['required']) {
         <p class="form-error">Vehicle image URL is required.</p>
-      </div>
+      }
+    </div>
 
-      <div class="form-submit">
-        <button type="submit" class="submit-btn">Update Offer</button>
-      </div>
-    </form>
-  </div>
+    <div class="submit-wrapper">
+      <button
+        type="submit"
+        class="btn-submit"
+        [disabled]="form.invalid"
+        [style]="{ backgroundColor: form.invalid ? 'grey' : '#4ebced' }">Submit Offer</button>
+    </div>
+  </form>
+</div>
 </div>

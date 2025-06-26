@@ -6,7 +6,7 @@
   padding: 2rem;
 }
 
-.offer-form {
+.offer-add-container {
   background-color: rgba(44, 47, 51, 0.95);
   padding: 2.5rem;
   border-radius: 1rem;
@@ -15,7 +15,7 @@
   width: 100%;
 }
 
-.form-title {
+.page-title {
   text-align: center;
   margin-bottom: 2rem;
   font-size: 2rem;
@@ -71,11 +71,11 @@
   font-size: 0.9rem;
 }
 
-.form-submit {
+.submit-wrapper {
   text-align: center;
 }
 
-.submit-btn {
+.btn-submit {
   background-color: #17a2b8;
   border: none;
   padding: 0.75rem 2rem;
@@ -86,7 +86,7 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.submit-btn:hover {
+.btn-submit:hover {
   background-color: #138496;
   transform: translateY(-2px);
 }
