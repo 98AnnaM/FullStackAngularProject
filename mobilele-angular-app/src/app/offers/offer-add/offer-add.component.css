@@ -1,16 +1,16 @@
 .offer-add-container {
-  max-width: 900px;
+  max-width: 850px;
   margin: 3rem auto;
-  padding: 2rem;
+  padding: 2.5rem;
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
 }
 
 .page-title {
   text-align: center;
   font-size: 2.2rem;
-  color: #ffffff;
+  color: white;
   margin-bottom: 2rem;
 }
 
@@ -37,8 +37,7 @@
 }
 
 .form-group label {
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
@@ -60,27 +59,30 @@
 }
 
 .form-error {
-  color: #ff6666;
   font-size: 0.9rem;
+  color: #ff6666;
   margin-top: 0.3rem;
 }
 
 .submit-wrapper {
-  display: flex;
-  justify-content: flex-end;
+  text-align: center;
 }
 
 .btn-submit {
   background-color: #4ebced;
-  color: #fff;
+  color: white;
+  padding: 0.8em 2em;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
   border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 6px;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  margin-top: 10px;
 }
 
 .btn-submit:hover {
-  background-color: #2e9acb;
+  background-color: #3aa4d9;
+  transform: scale(1.05);
+  outline: none;
 }

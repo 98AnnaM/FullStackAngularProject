@@ -112,11 +112,18 @@ public class OfferService {
 
         }
 
-    public OfferDetailDTO updateOfferById(OfferAddOrEditDto addOrEditOfferDto, Long id, UserDetails userDetails) {
-        OfferEntity updateOffer = offerMapper.addOrEditOfferDtoToOfferEntity(addOrEditOfferDto);
-        updateOffer.setId(id);
-        updateOffer.setSeller(userService.getUserByEmail(userDetails.getUsername()));
+    public OfferDetailDTO updateOfferById(OfferAddOrEditDto addOrEditOfferDto, Long id) {
+        OfferEntity updateOffer = this.offerRepository.findById(id).orElseThrow();
+
         updateOffer.setModel(modelRepository.findById(addOrEditOfferDto.getModelId()).orElseThrow());
+        updateOffer.setPrice(addOrEditOfferDto.getPrice());
+        updateOffer.setYear(addOrEditOfferDto.getYear());
+        updateOffer.setDescription(addOrEditOfferDto.getDescription());
+        updateOffer.setEngine(addOrEditOfferDto.getEngine());
+        updateOffer.setTransmission(addOrEditOfferDto.getTransmission());
+        updateOffer.setMileage(addOrEditOfferDto.getMileage());
+        updateOffer.setImageUrl(addOrEditOfferDto.getImageUrl());
+
         return offerMapper.offerEntityToOfferDetailDto(offerRepository.save(updateOffer));
     }
 }

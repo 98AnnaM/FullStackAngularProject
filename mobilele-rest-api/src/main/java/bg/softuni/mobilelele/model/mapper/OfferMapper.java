@@ -12,6 +12,7 @@ public interface OfferMapper {
     OfferEntity addOrEditOfferDtoToOfferEntity(OfferAddOrEditDto offerDto);
 
     @Mapping(source = "model.name", target = "modelName")
+    @Mapping(source = "model.id", target = "modelId")
     @Mapping(source = "model.brand.name", target = "brandName")
     @Mapping(source = "seller.firstName", target = "sellerFirstName")
     @Mapping(source = "seller.lastName", target = "sellerLastName")

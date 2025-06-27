@@ -5,7 +5,7 @@ import {RegisterComponent} from './user/register/register.component';
 import {OfferListComponent} from './offers/offer-list/offer-list.component';
 import {OfferDetailsComponent} from './offers/offer-details/offer-details.component';
 import {OfferAddComponent} from './offers/offer-add/offer-add.component';
-import {ErrorPageNotFoundComponent} from './error-page-not-found/error-page-not-found.component';
+import {ErrorPageComponent} from './error/error-page.component';
 import {BrandsListComponent} from './brands/brands-list/brands-list.component';
 import {OfferUpdateComponent} from './offers/offer-update/offer-update.component';
 
@@ -26,6 +26,6 @@ export const routes: Routes = [
     ]},
 
   {path: 'brands', component: BrandsListComponent},
-  {path: '404', component: ErrorPageNotFoundComponent},
-  {path: '**', redirectTo: '/404'}
+  { path: 'error/:errorCode', component: ErrorPageComponent },
+  { path: '**', redirectTo: '/error/404' }
 ];

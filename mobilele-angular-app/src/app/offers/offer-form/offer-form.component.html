@@ -1,0 +1,155 @@
+<div [ngClass]="mode" class="offer-add-container">
+  <h2 class="page-title">
+    {{ mode === 'create' ? 'Create Offer' : 'Update Offer' }}
+  </h2>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="form-body">
+
+    <!-- Model and Price -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="model">Model</label>
+        <select formControlName="modelId" id="model">
+          <option [ngValue]="null" disabled >- Select a model -</option>
+          @for (brand of brands; track $index) {
+            <optgroup [label]="brand.name">
+              @for (model of brand.models; track $index) {
+                <option [ngValue]="model.id">{{ model.name }}</option>
+              }
+            </optgroup>
+          }
+        </select>
+        @if (form.get('modelId')?.touched && form.get('modelId')?.errors?.['required']) {
+          <p class="form-error">Vehicle model is required.</p>
+        }
+
+        @if (form.get('modelId')?.errors?.['backend']) {
+          <p class="form-error">{{ form.get('modelId')?.errors?.['backend'] }}</p>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price (€)</label>
+        <input formControlName="price" id="price" placeholder="Suggested price" type="number"/>
+        @if (form.get('price')?.touched && form.get('price')?.errors?.['required']) {
+          <p class="form-error">Suggested price is required.</p>
+        }
+        @if (form.get('price')?.touched && form.get('price')?.errors?.['wholeNumberBiggerThenValidator']) {
+          <p class="form-error">Suggested price must be positive whole number.</p>
+        }
+
+        @if (form.get('price')?.errors?.['backend']) {
+          <p class="form-error">{{ form.get('price')?.errors?.['backend'] }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- Engine and Transmission -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="engine">Engine Type</label>
+        <select formControlName="engine" id="engine">
+          <option disabled selected value="">- Select engine type -</option>
+          @for (engineType of engineTypes; track $index) {
+            <option [ngValue]="engineType">{{ engineType | titlecase }}</option>
+          }
+        </select>
+        @if (form.get('engine')?.touched && form.get('engine')?.errors?.['required']) {
+          <p class="form-error">Engine type is required.</p>
+        }
+
+        @if (form.get('engine')?.errors?.['backend']) {
+          <p class="form-error">{{ form.get('engine')?.errors?.['backend'] }}</p>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="transmission">Transmission</label>
+        <select formControlName="transmission" id="transmission">
+          <option disabled selected value="">- Select transmission -</option>
+          @for (transmission of transmissionTypes; track $index) {
+            <option [ngValue]="transmission">{{ transmission | titlecase }}</option>
+          }
+        </select>
+        @if (form.get('transmission')?.touched && form.get('transmission')?.errors?.['required']) {
+          <p class="form-error">Transmission type is required.</p>
+        }
+
+        @if (form.get('transmission')?.errors?.['backend']) {
+          <p class="form-error">{{ form.get('transmission')?.errors?.['backend'] }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- Year and Mileage -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="year">Manufacture Year</label>
+        <input formControlName="year" id="year" placeholder="e.g. 2020" type="number"/>
+        @if (form.get('year')?.touched && form.get('year')?.errors?.['required']) {
+          <p class="form-error">Manufacturing year is required.</p>
+        }
+        @if (form.get('year')?.touched && (form.get('year')?.errors?.['wholeNumberBiggerThenValidator'] || form.get('year')?.errors?.['max'])) {
+          <p class="form-error">Manufacturing year must be whole number between 1990 till present.</p>
+        }
+
+        @if (form.get('year')?.errors?.['backend']) {
+          <p class="form-error">{{ form.get('year')?.errors?.['backend'] }}</p>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="mileage">Mileage (km)</label>
+        <input formControlName="mileage" id="mileage" placeholder="e.g. 75000" type="number"/>
+        @if (form.get('mileage')?.touched && form.get('mileage')?.errors?.['required']) {
+          <p class="form-error">Mileage in kilometers is required.</p>
+        }
+        @if (form.get('mileage')?.touched && (form.get('mileage')?.errors?.['wholeNumberBiggerThenValidator'] || form.get('mileage')?.errors?.['max'])) {
+          <p class="form-error">Mileage must be whole number between 0 and 999 999km.</p>
+        }
+
+        @if (form.get('mileage')?.errors?.['backend']) {
+          <p class="form-error">{{ form.get('mileage')?.errors?.['backend'] }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group full-width">
+      <label for="description">Description</label>
+      <textarea formControlName="description" id="description" maxlength="500" placeholder="Describe the vehicle..."
+                rows="4"></textarea>
+      @if (form.get('description')?.touched && form.get('description')?.errors?.['required']) {
+        <p class="form-error">Description is required.</p>
+      }
+
+      @if (form.get('description')?.errors?.['backend']) {
+        <p class="form-error">{{ form.get('description')?.errors?.['backend'] }}</p>
+      }
+    </div>
+
+    <!-- Image -->
+    <div class="form-group full-width">
+      <label for="imageUrl">Image URL</label>
+      <input formControlName="imageUrl" id="imageUrl" placeholder="https://example.com/car.jpg"
+             type="url"/>
+      @if (form.get('imageUrl')?.touched && form.get('description')?.errors?.['required']) {
+        <p class="form-error">Vehicle image URL is required.</p>
+      }
+
+      @if (form.get('imageUrl')?.errors?.['backend']) {
+        <p class="form-error">{{ form.get('imageUrl')?.errors?.['backend'] }}</p>
+      }
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrapper">
+      <button
+        [disabled]="form.invalid"
+        [style]="{ backgroundColor: form.invalid ? 'grey' : '#4ebced' }"
+        class="btn-submit"
+        type="submit">Submit Offer
+      </button>
+    </div>
+  </form>
+</div>

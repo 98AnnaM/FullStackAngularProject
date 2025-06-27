@@ -80,13 +80,13 @@ public class OfferController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("isAuthenticated() && @offerService.isOfferOwner(#principal.name, #id)")
+    @PreAuthorize("isAuthenticated() and @offerService.isOfferOwner(#principal.name, #id)")
     @PutMapping("/offers/edit/{id}")
     public ResponseEntity<?> update(
+            Principal principal,
             @PathVariable("id") Long id,
-            @Valid @RequestBody OfferAddOrEditDto offerModel,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        OfferDetailDTO updatedOffer = offerService.updateOfferById(offerModel, id, userDetails);
+            @Valid @RequestBody OfferAddOrEditDto offerModel) {
+        OfferDetailDTO updatedOffer = offerService.updateOfferById(offerModel, id);
         return ResponseEntity.ok(updatedOffer);
     }
 }

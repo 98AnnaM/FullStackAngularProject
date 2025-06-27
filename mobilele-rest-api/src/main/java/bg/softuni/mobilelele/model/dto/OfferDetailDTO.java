@@ -13,6 +13,7 @@ public class OfferDetailDTO {
     private Integer year;
     private String brandName;
     private String modelName;
+    private Long modelId;
     private Integer mileage;
     private BigDecimal price;
     private EngineEnum engine;
@@ -165,5 +166,13 @@ public class OfferDetailDTO {
 
     public void setCanUpdate(boolean canUpdate) {
         this.canUpdate = canUpdate;
+    }
+
+    public Long getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(Long modelId) {
+        this.modelId = modelId;
     }
 }

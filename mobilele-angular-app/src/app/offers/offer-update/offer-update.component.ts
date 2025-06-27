@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {BaseOfferForm} from '../base-offer-form';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {OfferAddOrEdit} from '../../types/offerAddOrEdit';
 import {OffersService} from '../offers.service';
 import {BrandsService} from '../../brands/brands.service';
@@ -11,6 +10,7 @@ import {combineLatest, finalize, Observable, of, tap} from 'rxjs';
 import {BrandView} from '../../types/brandView';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TitleCasePipe} from '@angular/common';
+import {OfferFormComponent} from '../offer-form/offer-form.component';
 
 @Component({
   selector: 'app-offer-update',
@@ -19,15 +19,19 @@ import {TitleCasePipe} from '@angular/common';
     LoaderComponent,
     FormsModule,
     ReactiveFormsModule,
-    TitleCasePipe
+    TitleCasePipe,
+    OfferFormComponent
   ],
   templateUrl: './offer-update.component.html',
   styleUrl: './offer-update.component.css'
 })
-export class OfferUpdateComponent extends BaseOfferForm implements OnInit {
+export class OfferUpdateComponent implements OnInit {
   offerId: string = '';
-  currentOffer: OfferView | undefined;
+  currentOffer: OfferView | null = null;
+  brands: BrandView[] = [];
   isLoading = true;
+
+  @ViewChild(OfferFormComponent) offerForm!: OfferFormComponent;
 
   constructor(
     private offerService: OffersService,
@@ -35,12 +39,10 @@ export class OfferUpdateComponent extends BaseOfferForm implements OnInit {
     private formErrorService: FormErrorService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-    super();
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.currentOffer = history.state.offer as OfferView | undefined;
+    this.currentOffer = history.state.offer as OfferView | null;
     this.offerId = this.route.snapshot.params['offerId'];
 
     const offer$: Observable<OfferView> = this.currentOffer
@@ -58,20 +60,19 @@ export class OfferUpdateComponent extends BaseOfferForm implements OnInit {
         tap(([offer, brands]) => {
           this.currentOffer = offer;
           this.brands = brands;
-          this.form.patchValue({...offer});
         }),
         finalize(() => this.isLoading = false)
       )
       .subscribe();
   }
 
-  protected override saveOffer(offerDto: OfferAddOrEdit): void {
+  save(offerDto: OfferAddOrEdit): void {
     this.offerService.updateOffer(this.offerId, offerDto).subscribe({
       next: (createdOffer: OfferView) => this.router.navigate([`/offers/${createdOffer.id}`]),
       error: err => {
         console.error(err);
         if (err.status === 400 && err.error?.errors) {
-          this.formErrorService.mapBackendErrorsToForm(this.form, err.error.errors);
+          this.formErrorService.mapBackendErrorsToForm(this.offerForm.form, err.error.errors);
         }
       }
     });
