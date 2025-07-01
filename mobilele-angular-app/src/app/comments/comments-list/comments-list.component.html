@@ -1,12 +1,16 @@
-<div class="comment">
-  <p class="comment-user">
-    {{ comment.user }}:
-    @if (comment.canDelete) {
-      <button class="delete-comment-btn-inline" (click)="deleteComment(comment.commentId)">Delete</button>
-    }
-  </p>
-  <p class="comment-date">{{ comment.created }}</p>
-  <p class="comment-text">{{ comment.message }}</p>
-</div>
+@if(isLoading) {
+  <app-loader/>
+} @else {
+  <div class="comment">
+    <p class="comment-user">
+      {{ comment.user }}:
+      @if (comment.canDelete) {
+        <button class="delete-comment-btn-inline" (click)="deleteComment(comment.commentId)">Delete</button>
+      }
+    </p>
+    <p class="comment-date">{{ comment.created }}</p>
+    <p class="comment-text">{{ comment.message }}</p>
+  </div>
+}
 
 

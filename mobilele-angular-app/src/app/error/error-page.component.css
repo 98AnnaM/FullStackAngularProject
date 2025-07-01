@@ -1,44 +1,38 @@
-.mainbox {
-  margin: auto;
-  height: 550px;
-  width: 550px;
-  position: relative;
+.main-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 100vh;
+  text-align: center;
+  padding: 2rem;
+  flex-direction: column;
+}
+
+.error-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
 }
 
 .err {
   color: white;
   font-family: 'Nunito Sans', sans-serif;
   font-size: 11rem;
-  position:absolute;
-  left: 20%;
-  top: 8%;
 }
 
 .far {
-  position: absolute;
   font-size: 8.5rem;
-  left: 42%;
-  top: 15%;
   color: white;
 }
 
-.err2 {
+.msg-row {
   color: white;
-  font-family: 'Nunito Sans', sans-serif;
-  font-size: 11rem;
-  position:absolute;
-  left: 68%;
-  top: 8%;
-}
-
-.msg {
-  text-align: center;
   font-family: 'Nunito Sans', sans-serif;
   font-size: 1.6rem;
-  position:absolute;
-  left: 16%;
-  top: 45%;
   width: 75%;
+  max-width: 800px;
 }
 
 a {

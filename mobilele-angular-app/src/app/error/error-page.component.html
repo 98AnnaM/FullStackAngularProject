@@ -1,8 +1,10 @@
-<div class="mainbox">
-  <div class="err">{{ errorCode.charAt(0) }}</div>
-  <i class="far fa-question-circle fa-spin"></i>
-  <div class="err2">{{ errorCode.charAt(2) }}</div>
-  <div class="msg">
+<div class="main-box">
+  <div class="error-row">
+    <div class="err">{{ errorCode.charAt(0) }}</div>
+    <i class="far fa-question-circle fa-spin"></i>
+    <div class="err">{{ errorCode.charAt(2) }}</div>
+  </div>
+  <div class="msg-row">
     {{ message }}
     <p>Let's go <a routerLink="/home">home</a> and try from there.</p>
   </div>

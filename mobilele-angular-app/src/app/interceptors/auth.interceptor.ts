@@ -13,8 +13,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(request).pipe(
     catchError(err => {
-      if (err.status === 403) {
-        router.navigate(['/error', '403']);
+      if (err.status) {
+        router.navigate(['/error', err.status.toString()]);
       }
       return throwError(() => err);
     })

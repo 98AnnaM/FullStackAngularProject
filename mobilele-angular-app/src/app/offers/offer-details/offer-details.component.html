@@ -1,51 +1,55 @@
-<div class="container offer-detail-container">
-  <h2 class="section-title">Offer Details</h2>
+@if(isLoading) {
+  <app-loader/>
+} @else {
+  <div class="container offer-detail-container">
+    <h2 class="section-title">Offer Details</h2>
 
-  <div class="offer-content">
-    <!-- Left: Image -->
-    <div class="offer-image-box">
-      <img [src]="offer.imageUrl" alt="Car image" class="offer-image" />
-    </div>
+    <div class="offer-content">
+      <!-- Left: Image -->
+      <div class="offer-image-box">
+        <img [src]="offer.imageUrl" alt="Car image" class="offer-image" />
+      </div>
 
-    <!-- Right: Info -->
-    <div class="offer-info-box">
-      <h3 class="offer-title">{{ offer.year }} {{ offer.brandName }} {{ offer.modelName }}</h3>
-      <ul class="offer-details">
-        <li><strong>Offer ID:</strong> {{ offer.id }}</li>
-        <li><strong>Mileage:</strong> {{ offer.mileage }} km</li>
-        <li><strong>Price:</strong> €{{ offer.price }}</li>
-        <li><strong>Engine:</strong> {{ offer.engine  | titlecase }}</li>
-        <li><strong>Transmission:</strong> {{ offer.transmission  | titlecase }}</li>
-        <li><strong>Description:</strong> {{ offer.description }}</li>
-        <li><strong>Seller:</strong> {{ offer.sellerFullName }} ({{ offer.sellerEmail }})</li>
-      </ul>
+      <!-- Right: Info -->
+      <div class="offer-info-box">
+        <h3 class="offer-title">{{ offer.year }} {{ offer.brandName }} {{ offer.modelName }}</h3>
+        <ul class="offer-details">
+          <li><strong>Offer ID:</strong> {{ offer.id }}</li>
+          <li><strong>Mileage:</strong> {{ offer.mileage }} km</li>
+          <li><strong>Price:</strong> €{{ offer.price }}</li>
+          <li><strong>Engine:</strong> {{ offer.engine  | titlecase }}</li>
+          <li><strong>Transmission:</strong> {{ offer.transmission  | titlecase }}</li>
+          <li><strong>Description:</strong> {{ offer.description }}</li>
+          <li><strong>Seller:</strong> {{ offer.sellerFullName }} ({{ offer.sellerEmail }})</li>
+        </ul>
 
-      <div class="offer-actions">
+        <div class="offer-actions">
 
-        @if (offer.canUpdate) {
-          <a (click)="goToEdit(offer)" class="btn-action">Update</a>
-        }
+          @if (offer.canUpdate) {
+            <a (click)="goToEdit(offer)" class="btn-action">Update</a>
+          }
 
-        @if (offer.canDelete) {
-          <button class="btn-action btn-danger" (click)="deleteOffer()">Delete</button>
-        }
+          @if (offer.canDelete) {
+            <button class="btn-action btn-danger" (click)="deleteOffer()">Delete</button>
+          }
 
+        </div>
       </div>
     </div>
+
+    <!-- Comments Section -->
+    <!-- Comments Section -->
+    <section class="comments-section">
+      <h3 class="comments-title">User Comments</h3>
+      @for (comment of offer.comments; track $index) {
+        <app-comments-list [comment]="comment" (commentDeleted)="reFetchCommentsList()"/>
+      }
+
+      @if (isLoggedIn) {
+        <app-comment-add (newCommentAdded)="reFetchCommentsList()" />
+      }
+
+    </section>
+
   </div>
-
-  <!-- Comments Section -->
-  <!-- Comments Section -->
-  <section class="comments-section">
-    <h3 class="comments-title">User Comments</h3>
-    @for (comment of offer.comments; track $index) {
-      <app-comments-list [comment]="comment" (commentDeleted)="reFetchCommentsList()"/>
-    }
-
-    @if (isLoggedIn) {
-      <app-comment-add (newCommentAdded)="reFetchCommentsList()" />
-    }
-
-  </section>
-
-</div>
+}

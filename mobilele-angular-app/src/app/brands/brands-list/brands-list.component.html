@@ -1,37 +1,40 @@
-<div class="brands-container">
-  <h2 class="brands-title">All Brands</h2>
+@if (isLoading) {
+  <app-loader/>
+} @else {
+  <div class="brands-container">
+    <h2 class="brands-title">All Brands</h2>
 
-  @for (brand of brands; track $index) {
-    <div class="brand-section">
-      <h3>Car brand: <span class="brand-name">{{ brand.name }}</span></h3>
-      <div class="models-table-wrapper">
-        <p>Models:</p>
-        <table class="models-table">
-          <thead>
-          <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Start Year</th>
-            <th>End Year</th>
-            <th>Picture</th>
-          </tr>
-          </thead>
-          <tbody>
-          @for (model of brand.models; track $index) {
+    @for (brand of brands; track $index) {
+      <div class="brand-section">
+        <h3>Car brand: <span class="brand-name">{{ brand.name }}</span></h3>
+        <div class="models-table-wrapper">
+          <p>Models:</p>
+          <table class="models-table">
+            <thead>
             <tr>
-              <td>{{ model.id }}</td>
-              <td>{{ model.name }}</td>
-              <td>{{ model.category }}</td>
-              <td>{{ model.startYear }}</td>
-              <td>{{ model.endYear ?? 'Present' }}</td>
-              <td><img [src] = "model.imageUrl" class="brand-img" /></td>
+              <th>No</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Start Year</th>
+              <th>End Year</th>
+              <th>Picture</th>
             </tr>
-          }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (model of brand.models; track $index) {
+                <tr>
+                  <td>{{ model.id }}</td>
+                  <td>{{ model.name }}</td>
+                  <td>{{ model.category }}</td>
+                  <td>{{ model.startYear }}</td>
+                  <td>{{ model.endYear  || 'Present' }}</td>
+                  <td><img [src] = "model.imageUrl" class="brand-img" /></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  }
-
-</div>
+    }
+  </div>
+}

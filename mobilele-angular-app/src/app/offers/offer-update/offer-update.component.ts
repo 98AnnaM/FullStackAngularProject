@@ -63,16 +63,31 @@ export class OfferUpdateComponent implements OnInit {
         }),
         finalize(() => this.isLoading = false)
       )
-      .subscribe();
+      .subscribe({
+        next: () => {},
+        error: (err) => {
+          this.isLoading = false; // Just in case finalize did not run
+          const status = err?.status;
+          this.router.navigate(['/error', status || '500']);
+        }
+      });
   }
 
   save(offerDto: OfferAddOrEdit): void {
+    this.isLoading = true;
     this.offerService.updateOffer(this.offerId, offerDto).subscribe({
-      next: (createdOffer: OfferView) => this.router.navigate([`/offers/${createdOffer.id}`]),
+      next: (createdOffer: OfferView) => {
+        this.router.navigate([`/offers/${createdOffer.id}`]);
+        this.isLoading = false;
+      },
       error: err => {
+        this.isLoading = false;
         console.error(err);
         if (err.status === 400 && err.error?.errors) {
           this.formErrorService.mapBackendErrorsToForm(this.offerForm.form, err.error.errors);
+        } else {
+          const status = err?.status;
+          this.router.navigate(['/error', status || '500']);
         }
       }
     });
