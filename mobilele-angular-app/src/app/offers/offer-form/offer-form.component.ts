@@ -7,6 +7,7 @@ import {EngineEnum} from '../../enums/engine-enum';
 import {TransmissionEnum} from '../../enums/transmission-enum';
 import {wholeNumberBiggerThenValidator} from '../../validators/whole-number-bigger-then.validator';
 import {OfferView} from '../../types/offerView';
+import { backendValidator } from '../../validators/backend.validator';
 
 @Component({
   selector: 'app-offer-form',
@@ -31,14 +32,14 @@ export class OfferFormComponent implements OnInit, OnChanges {
   transmissionTypes = Object.values(TransmissionEnum);
 
   form = new FormGroup({
-    modelId: new FormControl<number | null>(null, [Validators.required]),
-    price: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(1)]),
-    year: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(1990), Validators.max(new Date().getFullYear())]),
-    description: new FormControl('', [Validators.required]),
-    engine: new FormControl('', [Validators.required]),
-    transmission: new FormControl('', [Validators.required]),
-    imageUrl: new FormControl('', [Validators.required]),
-    mileage: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(0), Validators.max(999999)]),
+    modelId: new FormControl<number | null>(null, [Validators.required,  backendValidator()]),
+    price: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(1), backendValidator()]),
+    year: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(1990), Validators.max(new Date().getFullYear()), backendValidator()]),
+    description: new FormControl('', [Validators.required,  backendValidator()]),
+    engine: new FormControl('', [Validators.required, backendValidator()]),
+    transmission: new FormControl('', [Validators.required, backendValidator()]),
+    imageUrl: new FormControl('', [Validators.required, backendValidator()]),
+    mileage: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(0), Validators.max(999999), backendValidator()]),
   });
 
   protected patchForm(dto: OfferAddOrEdit): void {
