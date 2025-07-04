@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { OffersService } from '../offers.service';
 import { OfferAddOrEdit } from '../../types/offerAddOrEdit';
 import { OfferView } from '../../types/offerView';
-import { FormErrorService } from '../../form-error.service';
+import { ErrorService } from '../../errors/error.service';
 import { CommonModule } from '@angular/common';
 import { BrandsService } from '../../brands/brands.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -29,7 +29,7 @@ export class OfferAddComponent implements OnInit {
   constructor(
     private offerService: OffersService,
     private brandsService: BrandsService,
-    private formErrorService: FormErrorService,
+    private errorService: ErrorService,
     private router: Router
   ) {}
 
@@ -41,8 +41,7 @@ export class OfferAddComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }
@@ -56,16 +55,7 @@ export class OfferAddComponent implements OnInit {
       },
       error: err => {
         this.isLoading = false;
-        console.error(err);
-        if (err.status === 400 && err.error?.errors) {
-          this.formErrorService.mapBackendErrorsToForm(
-            this.offerFormComponent.form,
-            err.error.errors
-          );
-        } else {
-          const status = err?.status;
-          this.router.navigate(['/error', status || '500']);
-        }
+        this.errorService.handleHttpPostFormError(err, this.offerFormComponent.form);
       }
     });
   }

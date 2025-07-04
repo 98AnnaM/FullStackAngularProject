@@ -12,29 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bg.softuni.mobilelele.model.validation.ApiError;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, List<String>> errors = new HashMap<>();
+    public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException ex) {
+        ApiError apiError = new ApiError();
 
-        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-
-        for (FieldError error : fieldErrors) {
-            String fieldName = error.getField();
-            String message = error.getDefaultMessage();
-
-            if (!errors.containsKey(fieldName)) {
-                errors.put(fieldName, new ArrayList<>());
-            }
-
-            errors.get(fieldName).add(message);
+        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+            apiError.addError(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("errors", errors);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 }

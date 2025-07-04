@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { OfferView } from '../../types/offerView';
 import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../../shared/loader/loader.component';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { OffersService } from '../offers.service';
+import { ErrorService } from '../../errors/error.service';
 
 @Component({
   selector: 'app-offer-list',
@@ -17,7 +18,7 @@ export class OfferListComponent implements OnInit {
   isLoading: boolean = true;
 
   constructor(private offerService: OffersService,
-              private router: Router) {
+              private errorService: ErrorService) {
   }
 
   ngOnInit(): void {
@@ -28,8 +29,7 @@ export class OfferListComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }

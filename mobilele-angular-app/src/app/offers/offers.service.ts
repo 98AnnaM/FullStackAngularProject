@@ -12,23 +12,28 @@ export class OffersService {
   constructor(private http: HttpClient) { }
 
   getOffers() {
-    return this.http.get<OfferView[]>('http://localhost:8080/offers/all').pipe(delay(2000));
+    return this.http.get<OfferView[]>('http://localhost:8080/offers/all')
+      .pipe(delay(2000));
   }
 
   getSingleOffer(id: string) {
     console.log('Get offer call is made');
-    return this.http.get<OfferView>(`http://localhost:8080/offers/${id}`).pipe(delay(2000));
+    return this.http.get<OfferView>(`http://localhost:8080/offers/${id}`)
+      .pipe(delay(2000));
   }
 
   createOffer(offerAdd: OfferAddOrEdit) {
-    return this.http.post<OfferView>('http://localhost:8080/offers/add', offerAdd).pipe(delay(2000));
+    return this.http.post<OfferView>('http://localhost:8080/offers/add', offerAdd)
+      .pipe(delay(2000));
   }
 
   updateOffer(id: string, offerUpdate: OfferAddOrEdit) {
-    return this.http.put<OfferView>(`http://localhost:8080/offers/edit/${id}`, offerUpdate).pipe(delay(2000));
+    return this.http.put<OfferView>(`http://localhost:8080/offers/edit/${id}`, offerUpdate)
+      .pipe(delay(2000));
   }
 
   deleteOffer(id: string): Observable<void> {
-    return this.http.delete<void>(`http://localhost:8080/offers/${id}`).pipe(delay(2000));
+    return this.http.delete<void>(`http://localhost:8080/offers/${id}`)
+      .pipe(delay(2000));
   }
 }

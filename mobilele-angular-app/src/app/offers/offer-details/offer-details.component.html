@@ -41,8 +41,12 @@
     <!-- Comments Section -->
     <section class="comments-section">
       <h3 class="comments-title">User Comments</h3>
-      @for (comment of offer.comments; track $index) {
-        <app-comments-list [comment]="comment" (commentDeleted)="reFetchCommentsList()"/>
+      @if(isLoadingComments){
+        <app-loader/>
+      } @else {
+        @for (comment of offer.comments; track $index) {
+          <app-comments-list [comment]="comment" (commentDeleted)="reFetchCommentsList()"/>
+        }
       }
 
       @if (isLoggedIn) {

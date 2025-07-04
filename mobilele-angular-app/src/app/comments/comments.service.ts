@@ -17,7 +17,8 @@ export class CommentsService {
   }
 
   getComments(offerId: string) {
-    return this.http.get<CommentView[]>(`http://localhost:8080/offers/${offerId}/comments`);
+    return this.http.get<CommentView[]>(`http://localhost:8080/offers/${offerId}/comments`)
+      .pipe(delay(2000));
   }
 
   deleteComment(commentId: number): Observable<void> {

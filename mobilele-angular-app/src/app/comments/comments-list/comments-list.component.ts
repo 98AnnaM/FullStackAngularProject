@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommentView } from '../../types/commentView';
 import { CommentsService } from '../comments.service';
-import { Router } from '@angular/router';
 import { LoaderComponent } from '../../shared/loader/loader.component';
+import { ErrorService } from '../../errors/error.service';
 
 @Component({
   selector: 'app-comments-list',
@@ -20,7 +20,7 @@ export class CommentsListComponent {
   isLoading: boolean = false;
 
   constructor(private commentsService: CommentsService,
-              private router: Router) {
+              private errorService: ErrorService) {
   }
 
   deleteComment(commentId: number) {
@@ -32,8 +32,7 @@ export class CommentsListComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }

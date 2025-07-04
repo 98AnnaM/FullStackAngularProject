@@ -1,73 +1,79 @@
-<div class="container login-container">
-  <h2 class="login-title">Login</h2>
+@if (isLoading) {
+  <app-loader/>
+} @else {
+  <div class="container login-container">
+    <h2 class="login-title">Login</h2>
 
-  <form class="login-form" #form = "ngForm" (ngSubmit)="login(form)">
-    <div class="form-group">
-      <label for="username" class="form-label">Username</label>
-      <input
-        id="email"
-        name="email"
-        type="text"
-        class="form-input"
-        placeholder="email"
-        ngModel
-        #inputEmail="ngModel"
-        required
-        [appEmail]="domains" />
-    </div>
-
-    @if (inputEmail?.touched) {
-      <div>
-        @if (inputEmail?.errors?.['required']) {
-          <p class="errors">Email is required!</p>
-        }
-
-        @if (inputEmail?.errors?.['emailValidator']) {
-          <p class="errors">Email is not valid!</p>
-        }
+    <form class="login-form" #form = "ngForm" (ngSubmit)="login(form)">
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <input
+          id="email"
+          name="email"
+          type="text"
+          class="form-input"
+          placeholder="email"
+          [(ngModel)]="email"
+          #inputEmail="ngModel"
+          required
+          [appEmail]="domains"
+          (input)="resetBadCredentials()"/>
       </div>
-    }
 
-    <div class="form-group">
-      <label for="password" class="form-label">Password</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        class="form-input"
-        placeholder="password"
-        ngModel
-        #inputPassword = "ngModel"
-        minlength ="4"
-        maxlength="10"
-        required/>
-    </div>
+      @if (inputEmail?.touched) {
+        <div>
+          @if (inputEmail?.errors?.['required']) {
+            <p class="errors">Email is required!</p>
+          }
 
-    @if (inputEmail?.touched) {
-      <div>
-        @if (inputPassword?.errors?.['required']) {
-          <p class="errors">Password is required!</p>
-        }
+          @if (inputEmail?.errors?.['emailValidator']) {
+            <p class="errors">Email is not valid!</p>
+          }
+        </div>
+      }
 
-        @if (inputPassword?.errors?.['minlength']) {
-          <p class="errors">Password must be at least 4 characters!</p>
-        }
-
-        @if (inputPassword?.errors?.['maxlength']) {
-          <p class="errors">Password must be max 7 characters!</p>
-        }
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          class="form-input"
+          placeholder="password"
+          ngModel
+          #inputPassword = "ngModel"
+          minlength ="4"
+          maxlength="10"
+          required
+          (input)="resetBadCredentials()"/>
       </div>
-    }
 
-    @if (badCredentials) {
-      <p class="bad-credentials">Invalid username or password.</p>
-    }
+      @if (inputEmail?.touched) {
+        <div>
+          @if (inputPassword?.errors?.['required']) {
+            <p class="errors">Password is required!</p>
+          }
 
-    <div class="button-holder">
-      <button class="btn-submit"
-        [disabled]="form.invalid"
-        [style]="{backgroundColor: form.invalid ? 'grey' : '#4ebced'}">Login</button>
-    </div>
+          @if (inputPassword?.errors?.['minlength']) {
+            <p class="errors">Password must be at least 4 characters!</p>
+          }
 
-  </form>
-</div>
+          @if (inputPassword?.errors?.['maxlength']) {
+            <p class="errors">Password must be max 7 characters!</p>
+          }
+        </div>
+      }
+
+      @if (badCredentials) {
+        <p class="bad-credentials">Invalid username or password.</p>
+      }
+
+      <div class="button-holder">
+        <button class="btn-submit"
+                [disabled]="form.invalid"
+                [style]="{backgroundColor: form.invalid ? 'grey' : '#4ebced'}">Login</button>
+      </div>
+
+    </form>
+  </div>
+}

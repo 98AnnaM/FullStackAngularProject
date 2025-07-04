@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 import { BrandView } from '../../types/brandView';
 import { BrandsService } from '../brands.service';
-import { Router } from '@angular/router';
-import { LoaderComponent } from '../../shared/loader/loader.component'; // <-- import Router
+import { ErrorService } from '../../errors/error.service';
 
 @Component({
   selector: 'app-brands-list',
@@ -19,8 +19,9 @@ export class BrandsListComponent implements OnInit {
 
   constructor(
     private brandsService: BrandsService,
-    private router: Router // <-- inject Router
-  ) {}
+    private errorService: ErrorService
+  ) {
+  }
 
   ngOnInit(): void {
     this.brandsService.getBrands().subscribe({
@@ -30,8 +31,7 @@ export class BrandsListComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }

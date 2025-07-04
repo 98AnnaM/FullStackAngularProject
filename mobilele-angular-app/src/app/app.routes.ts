@@ -5,7 +5,7 @@ import {RegisterComponent} from './user/register/register.component';
 import {OfferListComponent} from './offers/offer-list/offer-list.component';
 import {OfferDetailsComponent} from './offers/offer-details/offer-details.component';
 import {OfferAddComponent} from './offers/offer-add/offer-add.component';
-import {ErrorPageComponent} from './error/error-page.component';
+import {ErrorPageComponent} from './errors/error/error-page.component';
 import {BrandsListComponent} from './brands/brands-list/brands-list.component';
 import {OfferUpdateComponent} from './offers/offer-update/offer-update.component';
 import { LoaderComponent } from './shared/loader/loader.component';
@@ -28,6 +28,6 @@ export const routes: Routes = [
 
   {path: 'brands', component: BrandsListComponent},
   {path: 'loader', component: LoaderComponent},
-  { path: 'error/:errorCode', component: ErrorPageComponent },
-  { path: '**', redirectTo: '/error/404' }
+  { path: 'error', component: ErrorPageComponent },
+  { path: '**', redirectTo: '/error', pathMatch: 'full', }
 ];

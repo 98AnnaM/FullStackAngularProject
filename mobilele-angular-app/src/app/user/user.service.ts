@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, catchError, delay, delayWhen, of, Subscription, tap, throwError } from 'rxjs';
 import { UserLoginResponse } from '../types/userLoginResponse';
 import {UserRegisterRequest} from '../types/userRegisterRequest';
 import {UserLoginRequest} from '../types/userLoginRequest';
@@ -31,6 +31,7 @@ export class UserService implements OnDestroy {
     return this.http
       .post<UserLoginResponse>('http://localhost:8080/users/login', userLoginRequest)
       .pipe(
+        delay(2000),
         tap(user => {
           localStorage.setItem('user', JSON.stringify(user));
           localStorage.setItem('token', user.token);
@@ -47,7 +48,10 @@ export class UserService implements OnDestroy {
 
   register(userRegisterRequest: UserRegisterRequest) {
     return this.http.post('http://localhost:8080/users/register', userRegisterRequest)
-      .pipe(tap((result) => {}));
+      .pipe(
+      catchError(err => throwError(() => err)),
+      delayWhen(() => of(null).pipe(delay(4000)))
+    );
   }
 
   ngOnDestroy(): void {

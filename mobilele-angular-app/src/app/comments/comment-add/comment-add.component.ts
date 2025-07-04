@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {UserService} from '../../user/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import {FormsModule, NgForm} from '@angular/forms';
-import {CommentAdd} from '../../types/commentAdd';
-import {CommentsService} from '../comments.service';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommentAdd } from '../../types/commentAdd';
+import { CommentsService } from '../comments.service';
 import { LoaderComponent } from '../../shared/loader/loader.component';
+import { ErrorService } from '../../errors/error.service';
 
 @Component({
   selector: 'app-comment-add',
@@ -16,25 +16,19 @@ import { LoaderComponent } from '../../shared/loader/loader.component';
 export class CommentAddComponent {
   @Output() newCommentAdded = new EventEmitter<void>();
 
-  isLoading = false;  // loader flag
+  isLoading = false;
 
   constructor(
-    private userService: UserService,
     private commentsService: CommentsService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
-
-  get username(): string {
-    const user = this.userService.user;
-    if (!user) return '';
-    return `${user.firstName} ${user.lastName} (${user.email})`;
+    private errorService: ErrorService,
+    private route: ActivatedRoute
+  ) {
   }
 
   addComment(form: NgForm) {
     if (form.invalid) return;
 
-    this.isLoading = true;  // start loading
+    this.isLoading = true;
 
     const commentAdd: CommentAdd = form.value;
     const offerId = this.route.snapshot.params['offerId'];
@@ -43,12 +37,11 @@ export class CommentAddComponent {
       next: () => {
         this.newCommentAdded.emit();
         form.resetForm();
-        this.isLoading = false;  // stop loading on success
+        this.isLoading = false;
       },
       error: (err) => {
-        this.isLoading = false;  // stop loading on error
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.isLoading = false;
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }

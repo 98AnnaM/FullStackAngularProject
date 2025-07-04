@@ -4,11 +4,12 @@ import { CommentsListComponent } from '../../comments/comments-list/comments-lis
 import { OfferView } from '../../types/offerView';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../user/user.service';
-import { TitleCasePipe } from '@angular/common';
 import { CommentView } from '../../types/commentView';
 import { OffersService } from '../offers.service';
 import { CommentsService } from '../../comments/comments.service';
 import { LoaderComponent } from '../../shared/loader/loader.component';
+import { ErrorService } from '../../errors/error.service';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-offer-details',
@@ -27,9 +28,11 @@ export class OfferDetailsComponent implements OnInit {
   offer = {} as OfferView;
   offerId: string = '';
   isLoading: boolean = true;
+  isLoadingComments: boolean = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
+              private errorService: ErrorService,
               private offerService: OffersService,
               private commentsService: CommentsService,
               private userService: UserService) {
@@ -52,20 +55,21 @@ export class OfferDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }
 
   reFetchCommentsList(): void {
+    this.isLoadingComments = true;
     this.commentsService.getComments(this.offerId).subscribe({
       next: (comments: CommentView[]) => {
+        this.isLoadingComments = false;
         this.offer.comments = comments;
       },
       error: (err) => {
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.isLoadingComments = false;
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }
@@ -76,14 +80,11 @@ export class OfferDetailsComponent implements OnInit {
     this.offerService.deleteOffer(this.offerId).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/offers']).catch(err => {
-          console.error('Navigation failed:', err);
-        });
+        this.router.navigate(['/offers']);
       },
       error: (err) => {
         this.isLoading = false;
-        const status = err?.status;
-        this.router.navigate(['/error', status || '500']);
+        this.errorService.navigateToErrorPage(err);
       }
     });
   }
