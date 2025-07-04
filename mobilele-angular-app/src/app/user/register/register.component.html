@@ -29,8 +29,8 @@
               </div>
             }
 
-            @if (form.get('firstName')?.errors?.['backend']) {
-              <p class="errors">{{ form.get('firstName')?.errors?.['backend'] }}</p>
+            @if (form.get('firstName')?.errors?.['backendValidator']) {
+              <p class="errors">{{ form.get('firstName')?.errors?.['backendValidator'] }}</p>
             }
           </div>
 
@@ -51,8 +51,8 @@
               </div>
             }
 
-            @if (form.get('lastName')?.errors?.['backend']) {
-              <p class="errors">{{ form.get('lastName')?.errors?.['backend'] }}</p>
+            @if (form.get('lastName')?.errors?.['backendValidator']) {
+              <p class="errors">{{ form.get('lastName')?.errors?.['backendValidator'] }}</p>
             }
           </div>
         </div>
@@ -99,8 +99,8 @@
                 </div>
               }
 
-              @if (form.get('passwordGroup.password')?.errors?.['backend']) {
-                <p class="errors">{{ form.get('passwordGroup.password')?.errors?.['backend'] }}</p>
+              @if (form.get('passwordGroup.password')?.errors?.['backendValidator']) {
+                <p class="errors">{{ form.get('passwordGroup.password')?.errors?.['backendValidator'] }}</p>
               }
             </div>
 
@@ -119,8 +119,8 @@
                 </div>
               }
 
-              @if (form.get('passwordGroup.rePassword')?.errors?.['backend']) {
-                <p class="errors">{{ form.get('passwordGroup.rePassword')?.errors?.['backend'] }}</p>
+              @if (form.get('passwordGroup.rePassword')?.errors?.['backendValidator']) {
+                <p class="errors">{{ form.get('passwordGroup.rePassword')?.errors?.['backendValidator'] }}</p>
               }
             </div>
           </div>
