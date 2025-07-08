@@ -97,11 +97,11 @@ class OfferControllerIT {
         OfferAddOrEditDto dto = new OfferAddOrEditDto();
         dto.setModelId(testModel.getId());
         dto.setPrice(BigDecimal.valueOf(11200));
-        dto.setEngine(EngineEnum.GASOLINE);
+        dto.setEngine(EngineEnum.GASOLINE.name());
         dto.setYear(1979);
         dto.setMileage(1000);
         dto.setDescription("test");
-        dto.setTransmission(TransmissionEnum.MANUAL);
+        dto.setTransmission(TransmissionEnum.MANUAL.name());
         dto.setImageUrl("image://test.png");
 
         String json = objectMapper.writeValueAsString(dto);

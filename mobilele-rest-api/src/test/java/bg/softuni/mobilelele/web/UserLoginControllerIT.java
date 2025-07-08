@@ -6,6 +6,7 @@ import bg.softuni.mobilelele.model.dto.UserViewDto;
 import bg.softuni.mobilelele.model.entity.UserEntity;
 import bg.softuni.mobilelele.model.entity.UserRoleEntity;
 import bg.softuni.mobilelele.model.enums.UserRoleEnum;
+import bg.softuni.mobilelele.model.validation.ApiError;
 import bg.softuni.mobilelele.util.TestDataUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -118,11 +120,15 @@ class UserLoginControllerIT {
         loginDto.setEmail("");
         loginDto.setPassword("somePassword");
 
+        ApiError expectedError = new ApiError();
+        expectedError.addError("email", "User email should be provided.");
+        String expectedJson = objectMapper.writeValueAsString(expectedError);
+
         mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.email", hasItem("User email should be provided.")));
+                .andExpect(content().json(expectedJson));
     }
 
     @Test
@@ -131,11 +137,15 @@ class UserLoginControllerIT {
         loginDto.setEmail("invalid-email");
         loginDto.setPassword("somePassword");
 
+        ApiError expectedError = new ApiError();
+        expectedError.addError("email", "User email should be valid.");
+        String expectedJson = objectMapper.writeValueAsString(expectedError);
+
         mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.email", hasItem("User email should be valid.")));
+                .andExpect(content().json(expectedJson));
     }
 
     @Test
@@ -144,10 +154,14 @@ class UserLoginControllerIT {
         loginDto.setEmail("user@example.com");
         loginDto.setPassword("");
 
+        ApiError expectedError = new ApiError();
+        expectedError.addError("password", "must not be empty");
+        String expectedJson = objectMapper.writeValueAsString(expectedError);
+
         mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.password", hasItem("must not be empty")));
+                .andExpect(content().json(expectedJson));
     }
 }

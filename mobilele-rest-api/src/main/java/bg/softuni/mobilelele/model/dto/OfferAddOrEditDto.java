@@ -2,6 +2,7 @@ package bg.softuni.mobilelele.model.dto;
 
 import bg.softuni.mobilelele.model.enums.EngineEnum;
 import bg.softuni.mobilelele.model.enums.TransmissionEnum;
+import bg.softuni.mobilelele.model.validation.EnumValue;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -28,11 +29,13 @@ public class OfferAddOrEditDto {
     @NotEmpty
     private String description;
 
-    @NotNull
-    private EngineEnum engine;
+    @NotEmpty
+    @EnumValue(enumClass = EngineEnum.class, message = "Invalid engine type")
+    private String engine;
 
-    @NotNull
-    private TransmissionEnum transmission;
+    @NotEmpty
+    @EnumValue(enumClass = TransmissionEnum.class, message = "Invalid transmission type")
+    private String transmission;
 
     @NotEmpty
     private String imageUrl;
@@ -74,22 +77,6 @@ public class OfferAddOrEditDto {
         this.description = description;
     }
 
-    public EngineEnum getEngine() {
-        return engine;
-    }
-
-    public void setEngine(EngineEnum engine) {
-        this.engine = engine;
-    }
-
-    public TransmissionEnum getTransmission() {
-        return transmission;
-    }
-
-    public void setTransmission(TransmissionEnum transmission) {
-        this.transmission = transmission;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
@@ -112,5 +99,21 @@ public class OfferAddOrEditDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public @NotEmpty String getEngine() {
+        return engine;
+    }
+
+    public void setEngine(@NotEmpty String engine) {
+        this.engine = engine;
+    }
+
+    public @NotEmpty String getTransmission() {
+        return transmission;
+    }
+
+    public void setTransmission(@NotEmpty String transmission) {
+        this.transmission = transmission;
     }
 }

@@ -16,8 +16,7 @@ public @interface FieldMatch {
 
     String second();
 
-
-    String message() default "Invalid Email";
+    String message() default "Passwords don't match";
 
     Class<?>[] groups() default {};
 

@@ -6,6 +6,7 @@ import bg.softuni.mobilelele.model.entity.CommentEntity;
 import bg.softuni.mobilelele.model.entity.ModelEntity;
 import bg.softuni.mobilelele.model.entity.OfferEntity;
 import bg.softuni.mobilelele.model.entity.UserEntity;
+import bg.softuni.mobilelele.model.validation.ApiError;
 import bg.softuni.mobilelele.util.TestDataUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -144,12 +145,16 @@ public class CommentControllerIT {
 
         long beforeCount = testDataUtils.getCommentRepository().count();
 
+        ApiError expectedError = new ApiError();
+        expectedError.addError("message", "must not be blank");
+        String expectedJson = objectMapper.writeValueAsString(expectedError);
+
         mockMvc.perform(post("/offers/{offerId}/comments", testOffer.getId())
-                        .contentType("application/json")
-                        .content(json)
-                        .with(csrf()))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.message").value("must not be blank"));
+                .contentType("application/json")
+                .content(json)
+                .with(csrf()))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(expectedJson));
 
         long afterCount = testDataUtils.getCommentRepository().count();
         Assertions.assertEquals(beforeCount, afterCount);

@@ -7,6 +7,8 @@ import bg.softuni.mobilelele.model.dto.OfferSearchDTO;
 import bg.softuni.mobilelele.model.entity.ModelEntity;
 import bg.softuni.mobilelele.model.entity.OfferEntity;
 import bg.softuni.mobilelele.model.entity.UserEntity;
+import bg.softuni.mobilelele.model.enums.EngineEnum;
+import bg.softuni.mobilelele.model.enums.TransmissionEnum;
 import bg.softuni.mobilelele.model.mapper.CommentMapper;
 import bg.softuni.mobilelele.model.mapper.OfferMapper;
 import bg.softuni.mobilelele.repository.ModelRepository;
@@ -119,8 +121,8 @@ public class OfferService {
         updateOffer.setPrice(addOrEditOfferDto.getPrice());
         updateOffer.setYear(addOrEditOfferDto.getYear());
         updateOffer.setDescription(addOrEditOfferDto.getDescription());
-        updateOffer.setEngine(addOrEditOfferDto.getEngine());
-        updateOffer.setTransmission(addOrEditOfferDto.getTransmission());
+        updateOffer.setEngine(EngineEnum.valueOf(addOrEditOfferDto.getEngine()));
+        updateOffer.setTransmission(TransmissionEnum.valueOf(addOrEditOfferDto.getTransmission()));
         updateOffer.setMileage(addOrEditOfferDto.getMileage());
         updateOffer.setImageUrl(addOrEditOfferDto.getImageUrl());
 
