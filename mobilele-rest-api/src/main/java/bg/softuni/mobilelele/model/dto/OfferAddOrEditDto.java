@@ -29,11 +29,9 @@ public class OfferAddOrEditDto {
     @NotEmpty
     private String description;
 
-    @NotEmpty
     @EnumValue(enumClass = EngineEnum.class, message = "Invalid engine type")
     private String engine;
 
-    @NotEmpty
     @EnumValue(enumClass = TransmissionEnum.class, message = "Invalid transmission type")
     private String transmission;
 

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgClass, TitleCasePipe} from "@angular/common";
 import {BrandView} from '../../types/brandView';
@@ -6,8 +6,7 @@ import {OfferAddOrEdit} from '../../types/offerAddOrEdit';
 import {EngineEnum} from '../../enums/engine-enum';
 import {TransmissionEnum} from '../../enums/transmission-enum';
 import {wholeNumberBiggerThenValidator} from '../../validators/whole-number-bigger-then.validator';
-import {OfferView} from '../../types/offerView';
-import { backendValidator } from '../../validators/backend.validator';
+import { BackendValidationMap } from '../../types/backendValidationMap';
 
 @Component({
   selector: 'app-offer-form',
@@ -21,10 +20,11 @@ import { backendValidator } from '../../validators/backend.validator';
   templateUrl: './offer-form.component.html',
   styleUrl: './offer-form.component.css'
 })
-export class OfferFormComponent implements OnInit, OnChanges {
+export class OfferFormComponent implements OnInit {
   @Input() mode: 'create' | 'update' = 'create';
   @Input() brands: BrandView[] = [];
-  @Input() offerData: OfferView | null = null;
+  @Input() backendErrorsMap: BackendValidationMap = {};
+  @Input() offerData: OfferAddOrEdit | null = null;
 
   @Output() submitForm = new EventEmitter<OfferAddOrEdit>();
 
@@ -32,14 +32,34 @@ export class OfferFormComponent implements OnInit, OnChanges {
   transmissionTypes = Object.values(TransmissionEnum);
 
   form = new FormGroup({
-    modelId: new FormControl<number | null>(null, [Validators.required,  backendValidator()]),
-    price: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(1), backendValidator()]),
-    year: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(1990), Validators.max(new Date().getFullYear()), backendValidator()]),
-    description: new FormControl('', [Validators.required,  backendValidator()]),
-    engine: new FormControl('', [Validators.required, backendValidator()]),
-    transmission: new FormControl('', [Validators.required, backendValidator()]),
-    imageUrl: new FormControl('', [Validators.required, backendValidator()]),
-    mileage: new FormControl<number | null>(null, [Validators.required, wholeNumberBiggerThenValidator(0), Validators.max(999999), backendValidator()]),
+    modelId: new FormControl<number | null>(null, [
+      Validators.required
+    ]),
+    price: new FormControl<number | null>(null, [
+      Validators.required,
+      wholeNumberBiggerThenValidator(1)
+    ]),
+    year: new FormControl<number | null>(null, [
+      Validators.required,
+      wholeNumberBiggerThenValidator(1990),
+      Validators.max(new Date().getFullYear())
+    ]),
+    description: new FormControl('', [
+      Validators.required
+    ]),
+    engine: new FormControl('', [
+      Validators.required]),
+    transmission: new FormControl('', [
+      Validators.required
+    ]),
+    imageUrl: new FormControl('', [
+      Validators.required
+    ]),
+    mileage: new FormControl<number | null>(null, [
+      Validators.required,
+      wholeNumberBiggerThenValidator(0),
+      Validators.max(999999)
+    ]),
   });
 
   protected patchForm(dto: OfferAddOrEdit): void {
@@ -59,12 +79,14 @@ export class OfferFormComponent implements OnInit, OnChanges {
     if (this.offerData) {
       this.patchForm(this.offerData);
     }
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['offerData']?.currentValue) {
-      this.patchForm(changes['offerData'].currentValue);
-    }
+    Object.keys(this.form.controls).forEach(fieldName => {
+      this.form.get(fieldName)?.valueChanges.subscribe(() => {
+        if (this.backendErrorsMap[fieldName]) {
+          delete this.backendErrorsMap[fieldName];
+        }
+      });
+    });
   }
 
   onSubmit(): void {
@@ -73,5 +95,9 @@ export class OfferFormComponent implements OnInit, OnChanges {
       return;
     }
     this.submitForm.emit(this.form.value as OfferAddOrEdit);
+  }
+
+  hasBackendErrors(): boolean {
+    return Object.keys(this.backendErrorsMap).length > 0;
   }
 }

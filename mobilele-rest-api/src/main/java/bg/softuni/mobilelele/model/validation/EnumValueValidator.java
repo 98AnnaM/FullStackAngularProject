@@ -16,7 +16,7 @@ public class EnumValueValidator implements ConstraintValidator<EnumValue, String
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        if (value == null) return false;
+        if (value == null || value.isEmpty() || value.isBlank()) return false;
 
         return Arrays.stream(enumClass.getEnumConstants())
             .anyMatch(e -> e.name().equalsIgnoreCase(value));

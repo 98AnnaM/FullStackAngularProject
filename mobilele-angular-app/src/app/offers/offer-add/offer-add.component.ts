@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { OfferFormComponent } from '../offer-form/offer-form.component';
 import { BrandView } from '../../types/brandView';
 import { LoaderComponent } from '../../shared/loader/loader.component';
+import { BackendValidationMap } from '../../types/backendValidationMap';
 
 @Component({
   selector: 'app-offer-add',
@@ -22,6 +23,8 @@ export class OfferAddComponent implements OnInit {
 
   brands: BrandView[] = [];
   isLoading: boolean = true;
+  errorMap: BackendValidationMap = {};
+  lastSubmittedOffer: OfferAddOrEdit | null = null;
 
   @ViewChild(OfferFormComponent)
   offerFormComponent!: OfferFormComponent;
@@ -47,7 +50,9 @@ export class OfferAddComponent implements OnInit {
   }
 
   createOffer(offerDto: OfferAddOrEdit): void {
+    this.lastSubmittedOffer = offerDto;
     this.isLoading = true;
+
     this.offerService.createOffer(offerDto).subscribe({
       next: (createdOffer: OfferView) => {
         this.isLoading = false;
@@ -55,7 +60,7 @@ export class OfferAddComponent implements OnInit {
       },
       error: err => {
         this.isLoading = false;
-        this.errorService.handleHttpPostFormError(err, this.offerFormComponent.form);
+        this.errorService.handleHttpPostFormError(err, this.errorMap);
       }
     });
   }

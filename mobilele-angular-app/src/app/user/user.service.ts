@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, delay, delayWhen, of, Subscription, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, delay, delayWhen, dematerialize, materialize, of, Subscription, tap, throwError } from 'rxjs';
 import { UserLoginResponse } from '../types/userLoginResponse';
 import {UserRegisterRequest} from '../types/userRegisterRequest';
 import {UserLoginRequest} from '../types/userLoginRequest';
@@ -47,10 +47,10 @@ export class UserService implements OnDestroy {
   }
 
   register(userRegisterRequest: UserRegisterRequest) {
-    return this.http.post('http://localhost:8080/users/register', userRegisterRequest)
-      .pipe(
-      catchError(err => throwError(() => err)),
-      delayWhen(() => of(null).pipe(delay(4000)))
+    return this.http.post('http://localhost:8080/users/register', userRegisterRequest).pipe(
+      materialize(),
+      delay(2000),
+      dematerialize()
     );
   }
 

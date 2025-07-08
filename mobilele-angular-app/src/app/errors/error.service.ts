@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
-import { BackendFormErrors, FieldError } from '../types/backendFormErrors';
+import { BackendValidationErrorResponse, FieldError } from '../types/backendValidationErrorResponse';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { BackendValidationMap } from '../types/backendValidationMap';
 
 @Injectable({providedIn: 'root'})
 export class ErrorService {
 
-  constructor(private router: Router) {
-  }
+  constructor(private router: Router) {}
 
   handleHttpPostFormError(
     err: HttpErrorResponse,
-    form: FormGroup,
+    errorMap: BackendValidationMap,
     mapField?: (backendField: string) => string
   ): void {
     if (err.status === 400 && err.error?.errors) {
-      this.addBackendValidationErrorsToEachControl(form, err.error, mapField);
+      this.collectBackendValidationErrors(err.error, errorMap, mapField);
     } else {
       this.navigateToErrorPage(err);
     }
@@ -40,32 +39,21 @@ export class ErrorService {
     }
   }
 
-  private addBackendValidationErrorsToEachControl(
-    form: FormGroup,
-    backendErrors: BackendFormErrors,
-    mapField?: (backendField: string) => string
-  ): void {
-    backendErrors.errors.forEach(({field, message}: FieldError) => {
-      const controlPath = mapField ? mapField(field) : field;
-      const control = this.getControl(form, controlPath);
-      if (control) {
-        const existingErrors = control.errors || {};
-        control.setErrors({ ...existingErrors, backend: message });
-        control.markAsTouched();
+  private collectBackendValidationErrors(
+    errorResponse: BackendValidationErrorResponse,
+    errorMap: BackendValidationMap,
+    mapField?: (backendField: string) => string)
+    : void {
+    Object.keys(errorMap).forEach(key => delete errorMap[key]);
+
+    errorResponse.errors.forEach(({ field, message }: FieldError) => {
+      const mappedField = mapField ? mapField(field) : field;
+
+      if (errorMap[mappedField]) {
+        errorMap[mappedField] += ', ' + message;
+      } else {
+        errorMap[mappedField] = message;
       }
     });
-  }
-
-  private getControl(form: FormGroup, controlPath: string): AbstractControl | null {
-    const parts = controlPath.split('.');
-
-    let control: AbstractControl | null = form;
-    for (const part of parts) {
-      if (!control) {
-        return null;
-      }
-      control = control.get(part);
-    }
-    return control;
   }
 }

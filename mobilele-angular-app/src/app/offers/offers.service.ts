@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {OfferView} from '../types/offerView';
 import {OfferAddOrEdit} from '../types/offerAddOrEdit';
-import { delay, Observable } from 'rxjs';
+import { delay, dematerialize, materialize, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +23,19 @@ export class OffersService {
   }
 
   createOffer(offerAdd: OfferAddOrEdit) {
-    return this.http.post<OfferView>('http://localhost:8080/offers/add', offerAdd)
-      .pipe(delay(2000));
+    return this.http.post<OfferView>('http://localhost:8080/offers/add', offerAdd).pipe(
+        materialize(),
+        delay(2000),
+        dematerialize()
+      );
   }
 
   updateOffer(id: string, offerUpdate: OfferAddOrEdit) {
-    return this.http.put<OfferView>(`http://localhost:8080/offers/edit/${id}`, offerUpdate)
-      .pipe(delay(2000));
+    return this.http.put<OfferView>(`http://localhost:8080/offers/edit/${id}`, offerUpdate).pipe(
+      materialize(),
+      delay(2000),
+      dematerialize()
+    );
   }
 
   deleteOffer(id: string): Observable<void> {

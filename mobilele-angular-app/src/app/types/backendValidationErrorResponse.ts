@@ -1,4 +1,4 @@
-export interface BackendFormErrors {
+export interface BackendValidationErrorResponse {
   errors: FieldError[];
 }
 

@@ -5,6 +5,7 @@
   <app-offer-form
     mode="update"
     [brands]="brands"
+    [backendErrorsMap]="errorMap"
     [offerData]="currentOffer"
     (submitForm)="save($event)">
   </app-offer-form>

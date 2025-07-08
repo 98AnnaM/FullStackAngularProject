@@ -11,6 +11,7 @@ import { BrandView } from '../../types/brandView';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { OfferFormComponent } from '../offer-form/offer-form.component';
+import { BackendValidationMap } from '../../types/backendValidationMap';
 
 @Component({
   selector: 'app-offer-update',
@@ -27,8 +28,9 @@ import { OfferFormComponent } from '../offer-form/offer-form.component';
 })
 export class OfferUpdateComponent implements OnInit {
   offerId: string = '';
-  currentOffer: OfferView | null = null;
+  currentOffer: OfferAddOrEdit | null = null;
   brands: BrandView[] = [];
+  errorMap: BackendValidationMap = {};
   isLoading = true;
 
   @ViewChild(OfferFormComponent) offerForm!: OfferFormComponent;
@@ -43,10 +45,10 @@ export class OfferUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentOffer = history.state.offer as OfferView | null;
+    this.currentOffer = history.state.offer as OfferAddOrEdit | null;
     this.offerId = this.route.snapshot.params['offerId'];
 
-    const offer$: Observable<OfferView> = this.currentOffer
+    const offer$: Observable<OfferAddOrEdit> = this.currentOffer
       ? of(this.currentOffer!)
       : this.offerService.getSingleOffer(this.offerId);
 
@@ -56,7 +58,9 @@ export class OfferUpdateComponent implements OnInit {
   }
 
   save(offerDto: OfferAddOrEdit): void {
+    this.currentOffer = offerDto;
     this.isLoading = true;
+
     this.offerService.updateOffer(this.offerId, offerDto).subscribe({
       next: (createdOffer: OfferView) => {
         this.router.navigate([`/offers/${createdOffer.id}`]);
@@ -64,12 +68,12 @@ export class OfferUpdateComponent implements OnInit {
       },
       error: err => {
         this.isLoading = false;
-        this.errorService.handleHttpPostFormError(err, this.offerForm.form);
+        this.errorService.handleHttpPostFormError(err, this.errorMap);
       }
     });
   }
 
-  private loadFormData(offer$: Observable<OfferView>, brands$: Observable<BrandView[]>): void {
+  private loadFormData(offer$: Observable<OfferAddOrEdit>, brands$: Observable<BrandView[]>): void {
     combineLatest([offer$, brands$]).subscribe({
       next: ([offer, brands]) => {
         this.currentOffer = offer;

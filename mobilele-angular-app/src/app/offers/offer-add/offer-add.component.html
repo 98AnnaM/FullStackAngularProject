@@ -1,9 +1,13 @@
-<app-loader [hidden]="!isLoading"/>
+@if(isLoading) {
+  <app-loader/>
+} @else {
+  <app-offer-form
+    mode="create"
+    [brands]="brands"
+    [backendErrorsMap]="errorMap"
+    [offerData]="lastSubmittedOffer"
+    (submitForm)="createOffer($event)">
+  </app-offer-form>
+}
 
-<app-offer-form
-  (submitForm)="createOffer($event)"
-  [brands]="brands"
-  [hidden]="isLoading"
-  mode="create">
-</app-offer-form>
-
+a
