@@ -30,7 +30,17 @@
           }
 
           @if (offer.canDelete) {
-            <button class="btn-action btn-danger" (click)="deleteOffer()">Delete</button>
+            <button class="btn-action btn-danger" (click)="openDeleteModal()">Delete</button>
+          }
+
+          @if(showConfirmModal) {
+            <app-confirmation-modal
+              title="Delete Offer"
+              message="Are you sure you want to delete this offer?"
+              (confirmed)="deleteOffer()"
+              (cancelled)="handleCancel()"
+              (closed)="handleCancel()"
+            />
           }
 
         </div>

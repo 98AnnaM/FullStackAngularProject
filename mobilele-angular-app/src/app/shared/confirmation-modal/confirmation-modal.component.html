@@ -1,0 +1,13 @@
+<div class="modal-overlay">
+  <div class="modal-box">
+    <button class="close-btn" (click)="onClose()">×</button>
+
+    <h3>{{ title }}</h3>
+    <p>{{ message }}</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-danger" (click)="onConfirm()">Delete</button>
+      <button class="btn" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+</div>

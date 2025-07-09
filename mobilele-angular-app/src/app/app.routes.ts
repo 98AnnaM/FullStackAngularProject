@@ -9,6 +9,7 @@ import {ErrorPageComponent} from './errors/error/error-page.component';
 import {BrandsListComponent} from './brands/brands-list/brands-list.component';
 import {OfferUpdateComponent} from './offers/offer-update/offer-update.component';
 import { LoaderComponent } from './shared/loader/loader.component';
+import { ConfirmationModalComponent } from './shared/confirmation-modal/confirmation-modal.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -27,6 +28,7 @@ export const routes: Routes = [
     ]},
 
   {path: 'brands', component: BrandsListComponent},
+  {path: 'modal', component: ConfirmationModalComponent},
   {path: 'loader', component: LoaderComponent},
   { path: 'error', component: ErrorPageComponent },
   { path: '**', redirectTo: '/error', pathMatch: 'full', }

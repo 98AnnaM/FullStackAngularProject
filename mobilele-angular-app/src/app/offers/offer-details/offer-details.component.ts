@@ -10,6 +10,7 @@ import { CommentsService } from '../../comments/comments.service';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { ErrorService } from '../../errors/error.service';
 import { TitleCasePipe } from '@angular/common';
+import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-offer-details',
@@ -19,7 +20,8 @@ import { TitleCasePipe } from '@angular/common';
     CommentsListComponent,
     TitleCasePipe,
     RouterLink,
-    LoaderComponent
+    LoaderComponent,
+    ConfirmationModalComponent
   ],
   templateUrl: './offer-details.component.html',
   styleUrl: './offer-details.component.css'
@@ -29,6 +31,7 @@ export class OfferDetailsComponent implements OnInit {
   offerId: string = '';
   isLoading: boolean = true;
   isLoadingComments: boolean = false;
+  showConfirmModal: boolean = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -91,5 +94,13 @@ export class OfferDetailsComponent implements OnInit {
 
   goToEdit(offer: OfferView) {
     this.router.navigate(['/offers', offer.id, 'edit'], {state: {offer}});
+  }
+
+  openDeleteModal() {
+    this.showConfirmModal = true;
+  }
+
+  handleCancel() {
+    this.showConfirmModal = false;
   }
 }

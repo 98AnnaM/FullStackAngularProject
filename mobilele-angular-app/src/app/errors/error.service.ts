@@ -34,8 +34,9 @@ export class ErrorService {
       case 400: return  'Bad Request - Invalid data sent.';
       case 401: return  'Unauthorized Access - Please login.';
       case 403: return 'Access Denied.';
+      case 404: return 'Ops! Page Not Found';
       case 500: return 'Internal Server Error - Please try again later.';
-      default: return  'Ops! Page Not Found';
+      default: return  'Something went wrong.';
     }
   }
 
