@@ -28,7 +28,6 @@ export const routes: Routes = [
     ]},
 
   {path: 'brands', component: BrandsListComponent},
-  {path: 'modal', component: ConfirmationModalComponent},
   {path: 'loader', component: LoaderComponent},
   { path: 'error', component: ErrorPageComponent },
   { path: '**', redirectTo: '/error', pathMatch: 'full', }

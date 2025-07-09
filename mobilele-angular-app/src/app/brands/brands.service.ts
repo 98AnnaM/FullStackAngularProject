@@ -11,6 +11,6 @@ export class BrandsService {
   constructor(private http: HttpClient) { }
 
   getBrands() {
-    return this.http.get<BrandView[]>('http://localhost:8080/brands/all').pipe(delay(2000));
+    return this.http.get<BrandView[]>('/api/brands/all').pipe(delay(2000));
   }
 }

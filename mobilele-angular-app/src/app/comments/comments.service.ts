@@ -12,17 +12,17 @@ export class CommentsService {
   constructor(private http: HttpClient) { }
 
   createComment(commentAdd: CommentAdd, offerId: string) {
-    return this.http.post<CommentView>(`http://localhost:8080/offers/${offerId}/comments`, commentAdd)
+    return this.http.post<CommentView>(`/api/offers/${offerId}/comments`, commentAdd)
       .pipe(delay(2000));
   }
 
   getComments(offerId: string) {
-    return this.http.get<CommentView[]>(`http://localhost:8080/offers/${offerId}/comments`)
+    return this.http.get<CommentView[]>(`/api/offers/${offerId}/comments`)
       .pipe(delay(2000));
   }
 
   deleteComment(commentId: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:8080/comments/${commentId}`)
+    return this.http.delete<void>(`/api/comments/${commentId}`)
       .pipe(delay(2000));
   }
 }

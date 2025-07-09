@@ -29,7 +29,7 @@ export class UserService implements OnDestroy {
 
   login(userLoginRequest: UserLoginRequest) {
     return this.http
-      .post<UserLoginResponse>('http://localhost:8080/users/login', userLoginRequest)
+      .post<UserLoginResponse>('/api/users/login', userLoginRequest)
       .pipe(
         delay(2000),
         tap(user => {
@@ -47,7 +47,7 @@ export class UserService implements OnDestroy {
   }
 
   register(userRegisterRequest: UserRegisterRequest) {
-    return this.http.post('http://localhost:8080/users/register', userRegisterRequest).pipe(
+    return this.http.post('/api/users/register', userRegisterRequest).pipe(
       materialize(),
       delay(2000),
       dematerialize()
