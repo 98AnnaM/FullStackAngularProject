@@ -25,9 +25,9 @@ public class OfferSpecification implements Specification<OfferEntity> {
 
         Predicate p = cb.conjunction();
 
-        if (searchOfferDTO.getModel() != null && !searchOfferDTO.getModel().isEmpty()) {
+        if (searchOfferDTO.getModelId() != null && !searchOfferDTO.getModelId().isEmpty()) {
             p.getExpressions().add(
-                    cb.and(cb.equal(root.join("model").get("name"), searchOfferDTO.getModel())));
+                    cb.and(cb.equal(root.join("model").get("id"), searchOfferDTO.getModelId())));
         }
 
         if (searchOfferDTO.getMinPrice() != null) {
@@ -39,6 +39,17 @@ public class OfferSpecification implements Specification<OfferEntity> {
             p.getExpressions().add(
                     cb.and(cb.lessThanOrEqualTo(root.get("price"), searchOfferDTO.getMaxPrice())));
         }
+
+        if (searchOfferDTO.getEngine() != null) {
+            p.getExpressions().add(
+                cb.equal(root.get("engine"), searchOfferDTO.getEngine()));
+        }
+
+        if (searchOfferDTO.getTransmission() != null) {
+            p.getExpressions().add(
+                cb.equal(root.get("transmission"), searchOfferDTO.getTransmission()));
+        }
+
         return p;
     }
 }

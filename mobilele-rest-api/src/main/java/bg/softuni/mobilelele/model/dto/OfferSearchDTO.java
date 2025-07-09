@@ -1,17 +1,22 @@
 package bg.softuni.mobilelele.model.dto;
 
+import bg.softuni.mobilelele.model.enums.EngineEnum;
+import bg.softuni.mobilelele.model.enums.TransmissionEnum;
+
 public class OfferSearchDTO {
 
-    private String model;
+    private String modelId;
     private Integer minPrice;
     private Integer maxPrice;
+    private EngineEnum engine;
+    private TransmissionEnum transmission;
 
-    public String getModel() {
-        return model;
+    public String getModelId() {
+        return modelId;
     }
 
-    public OfferSearchDTO setModel(String model) {
-        this.model = model;
+    public OfferSearchDTO setModelId(String modelId) {
+        this.modelId = modelId;
         return this;
     }
 
@@ -33,16 +38,34 @@ public class OfferSearchDTO {
         return this;
     }
 
+    public EngineEnum getEngine() {
+        return engine;
+    }
+
+    public void setEngine(EngineEnum engine) {
+        this.engine = engine;
+    }
+
+    public TransmissionEnum getTransmission() {
+        return transmission;
+    }
+
+    public void setTransmission(TransmissionEnum transmission) {
+        this.transmission = transmission;
+    }
+
     public boolean isEmpty() {
-        return (model == null || model.isEmpty()) &&
+        return (modelId == null || modelId.isEmpty()) &&
                 minPrice == null &&
-                maxPrice == null;
+                maxPrice == null &&
+                engine == null &&
+                transmission == null;
     }
 
     @Override
     public String toString() {
         return "SearchOfferDTO{" +
-                "model='" + model + '\'' +
+                "model='" + modelId + '\'' +
                 ", minPrice=" + minPrice +
                 ", maxPrice=" + maxPrice +
                 '}';

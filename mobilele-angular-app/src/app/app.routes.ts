@@ -10,6 +10,7 @@ import {BrandsListComponent} from './brands/brands-list/brands-list.component';
 import {OfferUpdateComponent} from './offers/offer-update/offer-update.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { ConfirmationModalComponent } from './shared/confirmation-modal/confirmation-modal.component';
+import { OfferSearchComponent } from './offers/offer-search/offer-search.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -22,6 +23,7 @@ export const routes: Routes = [
 
   {path: 'offers', children: [
       {path: 'add', component: OfferAddComponent },
+      {path: 'search', component: OfferSearchComponent},
       {path: '', component: OfferListComponent},
       {path: ':offerId', component: OfferDetailsComponent },
       {path: ':offerId/edit', component: OfferUpdateComponent}

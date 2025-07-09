@@ -1,0 +1,91 @@
+@if(isLoading) {
+  <app-loader/>
+} @else {
+  <div class="search-offers-container">
+
+    <div class="form-container">
+      <h2 class="page-title">Search for Offers</h2>
+      <form (ngSubmit)="onSubmit()" [formGroup]="form" class="search-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="model">Model</label>
+            <select formControlName="modelId" id="model" name="model">
+              <option [ngValue]="null">All</option>
+              @for (brand of brands; track $index) {
+                <optgroup [label]="brand.name">
+                  @for (model of brand.models; track $index) {
+                    <option [ngValue]="model.id">{{ model.name }}</option>
+                  }
+                </optgroup>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="minPrice">Min Price (€)</label>
+            <input formControlName="minPrice" type="number" id="minPrice" name="minPrice" placeholder="e.g. 1000" />
+            @if (form.get('minPrice')?.touched && form.get('minPrice')?.errors?.['wholeNumberBiggerThenValidator']) {
+              <p class="form-error">Must be positive whole number.</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="maxPrice">Max Price (€)</label>
+            <input formControlName="maxPrice" type="number" id="maxPrice" name="maxPrice" placeholder="e.g. 100000" />
+            @if (form.get('maxPrice')?.touched && form.get('maxPrice')?.errors?.['wholeNumberBiggerThenValidator']) {
+              <p class="form-error">Must be positive whole number.</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="engine">Engine</label>
+            <select formControlName="engine" id="engine">
+              <option selected value="">All</option>
+              @for (engineType of engineTypes; track $index) {
+                <option [ngValue]="engineType">{{ engineType | titlecase }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="transmission">Transmission</label>
+            <select formControlName="transmission" id="transmission">
+              <option selected value="">All</option>
+              @for (transmission of transmissionTypes; track $index) {
+                <option [ngValue]="transmission">{{ transmission | titlecase }}</option>
+              }
+            </select>
+          </div>
+
+        </div>
+
+        <div class="submit-wrapper">
+          <button
+            [disabled]="form.invalid"
+            [style]="{ backgroundColor: form.invalid ? 'grey' : '#4ebced' }"
+            class="btn-submit" type="submit">Search</button>
+        </div>
+      </form>
+    </div>
+
+    <div  class="offer-grid">
+
+      <h2 class="results-title">
+        @if(searchPerformed) {
+          @if(searchResults.length > 0) {
+            Results from search ({{ searchResults.length }})
+          } @else {
+            No results found
+          }
+        }
+      </h2>
+
+      @for (offer of searchResults; track $index) {
+        <app-offer-card [offer]="offer"/>
+      }
+    </div>
+
+  </div>
+}
+
+
