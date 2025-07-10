@@ -5,18 +5,16 @@ import bg.softuni.mobilelele.model.dto.CommentViewDto;
 import bg.softuni.mobilelele.model.entity.CommentEntity;
 import bg.softuni.mobilelele.model.entity.OfferEntity;
 import bg.softuni.mobilelele.model.entity.UserEntity;
-import bg.softuni.mobilelele.model.enums.UserRoleEnum;
 import bg.softuni.mobilelele.repository.CommentRepository;
 import bg.softuni.mobilelele.repository.OfferRepository;
-import bg.softuni.mobilelele.repository.UserRepository;
 import bg.softuni.mobilelele.web.exception.ObjectNotFoundException;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -32,16 +30,14 @@ public class CommentService {
     }
 
     @Transactional
-    public List<CommentViewDto> getComments(Long offerId, String principalEmail) {
-        Optional<OfferEntity> offerOptional = this.offerRepository.findById(offerId);
-
-        if (offerOptional.isEmpty()) {
+    public Page<CommentViewDto> getComments(Long offerId, String principalEmail, Pageable pageable) {
+        if (!offerRepository.existsById(offerId)) {
             throw new ObjectNotFoundException("Offer with id " + offerId + " was not found!");
         }
-        return offerOptional.get()
-                .getComments().stream()
-                .map(comment -> mapAsComment(comment, principalEmail))
-                .collect(Collectors.toList());
+
+        return commentRepository
+            .findAllByOffer_IdOrderByCreatedDesc(offerId, pageable)
+            .map(comment -> mapAsComment(comment, principalEmail));
     }
 
     private CommentViewDto mapAsComment(CommentEntity commentEntity, String principalEmail) {

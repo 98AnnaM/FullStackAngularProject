@@ -6,25 +6,41 @@ import { RouterLink } from '@angular/router';
 import { OffersService } from '../offers.service';
 import { ErrorService } from '../../errors/error.service';
 import { OfferCardComponent } from '../offer-card/offer-card.component';
+import { PaginationComponent } from '../../pagination/pagination.component';
+import { Page } from '../../types/page';
 
 @Component({
   selector: 'app-offer-list',
   standalone: true,
-  imports: [CommonModule, LoaderComponent, RouterLink, OfferCardComponent],
+  imports: [CommonModule, LoaderComponent, RouterLink, OfferCardComponent, PaginationComponent],
   templateUrl: './offer-list.component.html',
   styleUrl: './offer-list.component.css'
 })
 export class OfferListComponent implements OnInit {
   offers: OfferView[] = [];
   isLoading: boolean = true;
+  page: number = 0;
+  size: number = 5;
+  totalPages: number = 0;
+  totalElements: number = 0;
 
-  constructor(private offerService: OffersService,
-              private errorService: ErrorService) {}
+  constructor(
+    private offerService: OffersService,
+    private errorService: ErrorService
+  ) {}
 
   ngOnInit(): void {
-    this.offerService.getOffers().subscribe({
-      next: (offers) => {
-        this.offers = offers;
+    this.fetchOffers(this.page);
+  }
+
+  fetchOffers(page: number): void {
+    this.isLoading = true;
+    this.offerService.getOffers(page, this.size).subscribe({
+      next: (response: Page<OfferView>) => {
+        this.offers = response.content;
+        this.totalPages = response.totalPages;
+        this.page = response.number;
+        this.totalElements = response.totalElements;
         this.isLoading = false;
       },
       error: (err) => {
@@ -32,5 +48,9 @@ export class OfferListComponent implements OnInit {
         this.errorService.navigateToErrorPage(err);
       }
     });
+  }
+
+  loadOffers(newPage: number): void {
+    this.fetchOffers(newPage);
   }
 }

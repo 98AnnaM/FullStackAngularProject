@@ -14,10 +14,14 @@ import bg.softuni.mobilelele.model.mapper.OfferMapper;
 import bg.softuni.mobilelele.repository.ModelRepository;
 import bg.softuni.mobilelele.repository.OfferRepository;
 import bg.softuni.mobilelele.repository.OfferSpecification;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,25 +55,20 @@ public class OfferService {
 
         newOffer.setModel(model);
         newOffer.setSeller(seller);
+        newOffer.setCreated(LocalDateTime.now());
 
         return offerMapper.offerEntityToOfferDetailDto(this.offerRepository.save(newOffer));
     }
 
-    public List<OfferDetailDTO> findAllOfferDetailDto() {
-        return this.offerRepository
-                .findAll()
-                .stream()
-                .map(offerMapper::offerEntityToOfferDetailDto)
-                .toList();
-
+    public Page<OfferDetailDTO> findAllOfferDetailDto(Pageable pageable) {
+        return this.offerRepository.findAll(pageable)
+            .map(offerMapper::offerEntityToOfferDetailDto);
     }
 
-    public List<OfferDetailDTO> searchOffer(OfferSearchDTO searchOfferDTO) {
+    public Page<OfferDetailDTO> searchOffer(OfferSearchDTO searchOfferDTO, Pageable pageable) {
         return this.offerRepository
-                .findAll(new OfferSpecification(searchOfferDTO))
-                .stream()
-                .map(offerMapper::offerEntityToOfferDetailDto)
-                .toList();
+            .findAll(new OfferSpecification(searchOfferDTO), pageable)
+            .map(offerMapper::offerEntityToOfferDetailDto);
     }
 
     public Optional<OfferDetailDTO> findOfferByOfferId(Long offerID, String currentUser) {
@@ -77,16 +76,6 @@ public class OfferService {
                 findById(offerID).
                 map(offer -> {
                     OfferDetailDTO offerDetailDTO = offerMapper.offerEntityToOfferDetailDto(offer);
-
-                    List<CommentViewDto> comments = offer.getComments().stream()
-                            .map(comment -> {
-                            CommentViewDto commentViewDto = commentMapper.commentEntityToCommentViewDto(comment);
-                            commentViewDto.setCanDelete(commentService.isAuthorOrAdmin(currentUser, comment.getId()));
-                            return commentViewDto;
-                            })
-                            .toList();
-
-                    offerDetailDTO.setComments(comments);
                     offerDetailDTO.setCanDelete(isOfferOwner(currentUser, offerID) || this.userService.isUserAdmin(currentUser));
                     offerDetailDTO.setCanUpdate(isOfferOwner(currentUser, offerID));
 

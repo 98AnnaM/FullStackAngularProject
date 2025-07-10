@@ -15,6 +15,7 @@ import { OfferListComponent } from '../offer-list/offer-list.component';
 import { OfferCardComponent } from '../offer-card/offer-card.component';
 import { toHttpParams } from '../../utils/toHttpParams';
 import { HttpParams } from '@angular/common/http';
+import { PaginationComponent } from '../../pagination/pagination.component';
 
 @Component({
   selector: 'app-offer-search',
@@ -24,7 +25,8 @@ import { HttpParams } from '@angular/common/http';
     TitleCasePipe,
     LoaderComponent,
     OfferListComponent,
-    OfferCardComponent
+    OfferCardComponent,
+    PaginationComponent
   ],
   templateUrl: './offer-search.component.html',
   styleUrl: './offer-search.component.css'
@@ -34,7 +36,13 @@ export class OfferSearchComponent implements OnInit{
   engineTypes = Object.values(EngineEnum);
   transmissionTypes = Object.values(TransmissionEnum);
   brands: BrandView[] = [];
+
   searchResults: OfferView[] = [];
+  totalElements: number = 0;
+  totalPages: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 5;
+
   isLoading: boolean = true;
   isSearching: boolean = false;
   searchPerformed: boolean = false;
@@ -70,30 +78,39 @@ export class OfferSearchComponent implements OnInit{
     });
   }
 
-
-  onSubmit() {
+  fetchOffers(page: number = 0) {
     if (this.form.invalid) {
       return;
     }
 
     this.isSearching = true;
+    this.currentPage = page;
 
     const offerSearch = this.form.value as OfferSearch;
+
     const paramsObj = toHttpParams(offerSearch);
+    paramsObj['page'] = this.currentPage.toString();
+    paramsObj['size'] = this.pageSize.toString();
+
     const params = new HttpParams({fromObject: paramsObj});
 
     this.offerService.searchOffer(params)
       .subscribe({
-        next: (offers: OfferView[]) => {
+        next: (pageResult) => {
           this.isSearching = false;
           this.searchPerformed = true;
-          this.searchResults = offers;
+          this.searchResults = pageResult.content;
+          this.totalElements = pageResult.totalElements;
+          this.totalPages = pageResult.totalPages;
         },
         error: err => {
-          this.errorService.navigateToErrorPage(err);
           this.isSearching = false;
+          this.errorService.navigateToErrorPage(err);
         }
       });
+  }
 
+  loadOffers(newPage: number): void {
+    this.fetchOffers(newPage);
   }
 }

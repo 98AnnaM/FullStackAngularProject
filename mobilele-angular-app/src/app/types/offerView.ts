@@ -1,6 +1,5 @@
 import {EngineEnum} from '../enums/engine-enum';
 import {TransmissionEnum} from '../enums/transmission-enum';
-import {CommentView} from './commentView';
 
 export interface OfferView {
   id: number;
@@ -19,7 +18,6 @@ export interface OfferView {
   canDelete: boolean;
   canUpdate: boolean;
   description: string;
-  comments: CommentView[];
   offerHighlight: string;
   sellerFullName: string;
 }

@@ -8,6 +8,11 @@ import bg.softuni.mobilelele.service.BrandService;
 import bg.softuni.mobilelele.service.OfferService;
 import bg.softuni.mobilelele.service.UserService;
 import bg.softuni.mobilelele.web.exception.ObjectNotFoundException;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 public class OfferController {
@@ -34,29 +37,35 @@ public class OfferController {
     }
 
     @GetMapping("/offers/all")
-    public ResponseEntity<List<OfferDetailDTO>> allOffers() {
-        return ResponseEntity.ok(this.offerService.findAllOfferDetailDto());
+    public ResponseEntity<Page<OfferDetailDTO>> allOffers(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "created"));
+        Page<OfferDetailDTO> pagedOffers = offerService.findAllOfferDetailDto(pageable);
+        return ResponseEntity.ok(pagedOffers);
+    }
+
+    @GetMapping("/offers/search")
+    public ResponseEntity<Page<OfferDetailDTO>> searchQuery(
+        @Valid OfferSearchDTO searchOfferDTO,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("created").descending());
+        Page<OfferDetailDTO> offers = offerService.searchOffer(searchOfferDTO, pageable);
+
+        return ResponseEntity.ok(offers);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/offers/add")
     public ResponseEntity<?> addOffer(@Valid @RequestBody OfferAddOrEditDto addOfferModel,
-                                      @AuthenticationPrincipal UserDetails userDetails) {
+        @AuthenticationPrincipal UserDetails userDetails) {
         OfferDetailDTO createdOffer = this.offerService.addOffer(addOfferModel, userDetails);
         return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createdOffer);
-    }
-
-    @GetMapping("/offers/search")
-    public ResponseEntity<?> searchQuery(@Valid OfferSearchDTO searchOfferDTO) {
-
-        if (searchOfferDTO.isEmpty()) {
-            return ResponseEntity.ok(Collections.emptyList());
-        }
-
-        List<OfferDetailDTO> offers = offerService.searchOffer(searchOfferDTO);
-        return ResponseEntity.ok(offers);
+            .status(HttpStatus.CREATED)
+            .body(createdOffer);
     }
 
     @GetMapping("/offers/{id}")

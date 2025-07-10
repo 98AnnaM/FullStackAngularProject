@@ -2,7 +2,7 @@
   <app-loader/>
 }@else{
   <div class="all-offers-container">
-    <h2 class="page-title">All Car Offers</h2>
+    <h2 class="page-title">All Car Offers ({{totalElements}})</h2>
 
     <div class="offer-grid">
 
@@ -12,6 +12,13 @@
       }
 
     </div>
+
+    <app-pagination
+      [page]="page"
+      [totalPages]="totalPages"
+      (pageChange)="loadOffers($event)">
+    </app-pagination>
+
   </div>
 }
 

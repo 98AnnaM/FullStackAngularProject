@@ -5,7 +5,7 @@
 
     <div class="form-container">
       <h2 class="page-title">Search for Offers</h2>
-      <form (ngSubmit)="onSubmit()" [formGroup]="form" class="search-form">
+      <form (ngSubmit)="fetchOffers()" [formGroup]="form" class="search-form">
         <div class="form-row">
           <div class="form-group">
             <label for="model">Model</label>
@@ -75,8 +75,8 @@
 
         <h2 class="results-title">
           @if(searchPerformed) {
-            @if(searchResults.length > 0) {
-              Results from search ({{ searchResults.length }})
+            @if(totalElements > 0) {
+              Results from search ({{ totalElements }})
             } @else {
               No results found
             }
@@ -87,6 +87,12 @@
           <app-offer-card [offer]="offer"/>
         }
       </div>
+
+      <app-pagination
+        [page]="currentPage"
+        [totalPages]="totalPages"
+        (pageChange)="loadOffers($event)">
+      </app-pagination>
     }
 
   </div>

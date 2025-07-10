@@ -3,8 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {OfferView} from '../types/offerView';
 import {OfferAddOrEdit} from '../types/offerAddOrEdit';
 import { delay, dematerialize, materialize, Observable } from 'rxjs';
-import { OfferSearch } from '../types/offerSearch';
-import { toHttpParams } from '../utils/toHttpParams';
+import { Page } from '../types/page';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +13,17 @@ export class OffersService {
   constructor(private http: HttpClient) {
   }
 
-  getOffers() {
-    return this.http.get<OfferView[]>('/api/offers/all')
+  getOffers(page: number = 0, size: number = 5) {
+    return this.http.get<Page<OfferView>>(`/api/offers/all?page=${page}&size=${size}`)
+      .pipe(delay(2000));
+  }
+
+  searchOffer(params: HttpParams): Observable<Page<OfferView>> {
+    return this.http.get<Page<OfferView>>('/api/offers/search', { params })
       .pipe(delay(2000));
   }
 
   getSingleOffer(id: string) {
-    console.log('Get offer call is made');
     return this.http.get<OfferView>(`/api/offers/${id}`)
       .pipe(delay(2000));
   }
@@ -43,11 +46,6 @@ export class OffersService {
 
   deleteOffer(id: string): Observable<void> {
     return this.http.delete<void>(`/api/offers/${id}`)
-      .pipe(delay(2000));
-  }
-
-  searchOffer(params: HttpParams): Observable<OfferView[]> {
-    return this.http.get<OfferView[]>('/api/offers/search', { params })
       .pipe(delay(2000));
   }
 }

@@ -4,6 +4,10 @@ import bg.softuni.mobilelele.model.dto.CommentAddDto;
 import bg.softuni.mobilelele.model.dto.CommentServiceModel;
 import bg.softuni.mobilelele.model.dto.CommentViewDto;
 import bg.softuni.mobilelele.service.CommentService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 public class CommentController {
@@ -23,10 +26,17 @@ public class CommentController {
     }
 
     @GetMapping("/offers/{offerId}/comments")
-    public ResponseEntity<List<CommentViewDto>> getComments(
-            @PathVariable Long offerId,
-            @AuthenticationPrincipal UserDetails principal) {
-        return ResponseEntity.ok(commentService.getComments(offerId, principal != null ? principal.getUsername() : null));
+    public ResponseEntity<Page<CommentViewDto>> getComments(
+        @PathVariable Long offerId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        @AuthenticationPrincipal UserDetails principal) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CommentViewDto> result = commentService.getComments(offerId,
+            principal != null ? principal.getUsername() : null,
+            pageable);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/offers/{offerId}/comments")

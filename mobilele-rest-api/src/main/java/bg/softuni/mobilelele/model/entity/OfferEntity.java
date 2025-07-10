@@ -5,6 +5,7 @@ import bg.softuni.mobilelele.model.enums.TransmissionEnum;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -41,6 +42,9 @@ public class OfferEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "offer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CommentEntity> comments;
+
+    @Column(name = "created", nullable = false)
+    private LocalDateTime created;
 
     public EngineEnum getEngine() {
         return engine;
@@ -129,6 +133,14 @@ public class OfferEntity extends BaseEntity {
 
     public void setComments(List<CommentEntity> comments) {
         this.comments = comments;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     @Override

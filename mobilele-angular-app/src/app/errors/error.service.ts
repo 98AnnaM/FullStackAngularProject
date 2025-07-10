@@ -22,6 +22,8 @@ export class ErrorService {
   }
 
   navigateToErrorPage(err: HttpErrorResponse) {
+    console.log(err);
+    console.log(err.status);
     const errorCode = err?.status ?? 500;
     const message: string = this.getErrorMessage(errorCode);
     this.router.navigate(['/error'], {

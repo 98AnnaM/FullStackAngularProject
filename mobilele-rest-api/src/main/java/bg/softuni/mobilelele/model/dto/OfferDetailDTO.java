@@ -24,7 +24,6 @@ public class OfferDetailDTO {
     private boolean canDelete;
     private boolean canUpdate;
     private String description;
-    private List<CommentViewDto> comments;
 
     public OfferDetailDTO() {
     }
@@ -150,14 +149,6 @@ public class OfferDetailDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<CommentViewDto> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentViewDto> comments) {
-        this.comments = comments;
     }
 
     public boolean isCanUpdate() {

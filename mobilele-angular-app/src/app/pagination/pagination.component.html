@@ -1,0 +1,16 @@
+@if (totalPages > 0) {
+  <div class="pagination-controls">
+    <button (click)="goToPage(0)" [disabled]="page === 0">«</button>
+    <button (click)="goToPage(page - 1)" [disabled]="page === 0">‹</button>
+
+    @for(pageNumber of pageNumbers; track $index) {
+      <button [class.active]="pageNumber === page"
+              (click)="goToPage(pageNumber)">
+        {{ pageNumber + 1 }}
+      </button>
+    }
+
+    <button (click)="goToPage(page + 1)" [disabled]="page + 1 >= totalPages">›</button>
+    <button (click)="goToPage(totalPages - 1)" [disabled]="page === totalPages - 1">»</button>
+  </div>
+}
