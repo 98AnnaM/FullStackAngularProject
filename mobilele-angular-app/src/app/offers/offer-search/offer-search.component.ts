@@ -36,6 +36,7 @@ export class OfferSearchComponent implements OnInit{
   brands: BrandView[] = [];
   searchResults: OfferView[] = [];
   isLoading: boolean = true;
+  isSearching: boolean = false;
   searchPerformed: boolean = false;
 
   form = new FormGroup({
@@ -75,7 +76,7 @@ export class OfferSearchComponent implements OnInit{
       return;
     }
 
-    this.isLoading = true;
+    this.isSearching = true;
 
     const offerSearch = this.form.value as OfferSearch;
     const paramsObj = toHttpParams(offerSearch);
@@ -84,13 +85,13 @@ export class OfferSearchComponent implements OnInit{
     this.offerService.searchOffer(params)
       .subscribe({
         next: (offers: OfferView[]) => {
-          this.isLoading = false;
-          this.searchResults = offers;
+          this.isSearching = false;
           this.searchPerformed = true;
+          this.searchResults = offers;
         },
         error: err => {
           this.errorService.navigateToErrorPage(err);
-          this.isLoading = false;
+          this.isSearching = false;
         }
       });
 

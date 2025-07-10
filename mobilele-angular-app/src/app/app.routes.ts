@@ -9,8 +9,8 @@ import {ErrorPageComponent} from './errors/error/error-page.component';
 import {BrandsListComponent} from './brands/brands-list/brands-list.component';
 import {OfferUpdateComponent} from './offers/offer-update/offer-update.component';
 import { LoaderComponent } from './shared/loader/loader.component';
-import { ConfirmationModalComponent } from './shared/confirmation-modal/confirmation-modal.component';
 import { OfferSearchComponent } from './offers/offer-search/offer-search.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -22,11 +22,11 @@ export const routes: Routes = [
     ]},
 
   {path: 'offers', children: [
-      {path: 'add', component: OfferAddComponent },
+      {path: 'add', component: OfferAddComponent, canActivate: [AuthGuard] },
       {path: 'search', component: OfferSearchComponent},
       {path: '', component: OfferListComponent},
       {path: ':offerId', component: OfferDetailsComponent },
-      {path: ':offerId/edit', component: OfferUpdateComponent}
+      {path: ':offerId/edit', component: OfferUpdateComponent, canActivate: [AuthGuard]}
     ]},
 
   {path: 'brands', component: BrandsListComponent},

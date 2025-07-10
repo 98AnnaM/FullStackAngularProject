@@ -68,22 +68,26 @@
       </form>
     </div>
 
-    <div  class="offer-grid">
+    @if (isSearching) {
+      <app-loader/>
+    } @else {
+      <div  class="offer-grid">
 
-      <h2 class="results-title">
-        @if(searchPerformed) {
-          @if(searchResults.length > 0) {
-            Results from search ({{ searchResults.length }})
-          } @else {
-            No results found
+        <h2 class="results-title">
+          @if(searchPerformed) {
+            @if(searchResults.length > 0) {
+              Results from search ({{ searchResults.length }})
+            } @else {
+              No results found
+            }
           }
-        }
-      </h2>
+        </h2>
 
-      @for (offer of searchResults; track $index) {
-        <app-offer-card [offer]="offer"/>
-      }
-    </div>
+        @for (offer of searchResults; track $index) {
+          <app-offer-card [offer]="offer"/>
+        }
+      </div>
+    }
 
   </div>
 }
