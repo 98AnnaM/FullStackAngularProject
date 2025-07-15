@@ -21,6 +21,10 @@ can post comments.
 
 ### ▶️ Running the Application
 
+- For the frontend:
+Run `npm install` and then `ng serve`. 
+
+- For the backend:
 No setup required! Simply run the application as a standard Spring Boot app (e.g., via your IDE or `mvn spring-boot:run`).
 Once started, the application automatically initializes:
 
