@@ -4,11 +4,15 @@
       <img src="/images/car.png" alt="car picture" class="logo">
     </a>
 
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+    <button class="nav-toggle"
+            (click)="toggleMenu()"
+            aria-label="Toggle navigation"
+            [attr.aria-expanded]="isMenuOpen"
+            aria-controls="nav-menu">
       <span class="nav-toggle-icon"></span>
     </button>
 
-    <div class="nav-menu" id="nav-menu">
+    <div class="nav-menu" id="nav-menu" [ngClass]="{'active': isMenuOpen}">
       <ul class="nav-list">
         <li><a routerLink="/brands" class="nav-link">Brands</a></li>
         <li><a routerLink="/offers" class="nav-link">Offers</a></li>
